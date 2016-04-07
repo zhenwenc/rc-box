@@ -1,0 +1,16 @@
+/bower_components/
+/lib/doc/
+/scripts/
+**/test/
+/.editorconfig
+/.gitattributes
+/.npmignore
+/.travis.yml
+/.jscsrc
+/.jshintrc
+/CONTRIBUTING.md
+/Makefile
+/bower.json
+/index.js
+/npm-debug.log
+/tmp

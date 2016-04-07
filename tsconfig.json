@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "declaration": true,
+        "jsx": "react",
+        "module": "commonjs",
+        "noLib": false,
+        "removeComments": false,
+        "rootDir": ".",
+        "target": "es6",
+        "outDir": "dist",
+        "moduleResolution": "classic",
+        "noImplicitAny": false
+    },
+    "filesGlob": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "test/**/*.ts",
+        "test/**/*.tsx",
+        "typings/browser.d.ts"
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    },
+    "files": [
+        "src/index.ts",
+        "src/DataTable.tsx",
+        "src/DataTableColumn.tsx",
+        "src/MuiTableRenderer.tsx"
+    ]
+}

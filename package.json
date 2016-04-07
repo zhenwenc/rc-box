@@ -1,0 +1,81 @@
+{
+  "name": "twrap",
+  "version": "0.1.0",
+  "description": "A React table data manipulator",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "typescript": {
+    "definition": "./lib/index.d.ts"
+  },
+  "files": [
+    "LICENSE",
+    "lib"
+  ],
+  "scripts": {
+    "clean": "npm cache clean && rimraf node_modules doc typings coverage dist",
+    "clean:dist": "rimraf lib dist coverage",
+    "lint": "./node_modules/.bin/tslint 'src/**/*.ts'",
+    "test": "karma start",
+    "build": "ntsc",
+    "prebuild": "npm run clean:dist && npm run typings-install && tsconfig",
+    "watch": "npm run watch:test",
+    "watch:test": "npm test -- --auto-watch --no-single-run",
+    "typings-install": "typings install",
+    "docs": "npm run docs:clean && npm run docs:build",
+    "docs:clean": "rimraf doc",
+    "docs:build": "typedoc --out docs --options typedoc.json --exclude '**/*.spec.ts' ./src/",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME docs && cd docs && git init && git commit --allow-empty -m 'update docs' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update docs' && git push git@github.com:zhenwenc/twrap gh-pages --force",
+    "prepublish": "npm run build && babel dist/src --presets babel-preset-es2015 --out-dir lib && rsync -avm --include='*.d.ts' -f 'hide,! */' dist/src/ lib && npm run docs",
+    "publishLocal": "npm pack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhenwenc/twrap.git"
+  },
+  "keywords": [
+    "twrap",
+    "table",
+    "table module",
+    "typescript",
+    "datatable",
+    "material",
+    "material-ui"
+  ],
+  "author": "Zhenwen Cai <frederickcai@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhenwenc/twrap/issues"
+  },
+  "homepage": "http://twrap.js.org",
+  "devDependencies": {
+    "awesome-typescript-loader": "^0.17.0-rc.5",
+    "babel-cli": "^6.6.5",
+    "babel-core": "^6.6.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "chai": "^3.5.0",
+    "immutable": "^3.7.6",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-coverage": "^0.5.5",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-mocha": "^0.2.2",
+    "karma-mocha-reporter": "^2.0.0",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "lodash": "^4.6.1",
+    "mocha": "^2.4.5",
+    "ntypescript": "^1.201603270104.1",
+    "phantomjs-prebuilt": "^2.1.7",
+    "react-dom": "^0.14.8",
+    "should": "^8.2.2",
+    "ts-node": "^0.7.1",
+    "typedoc": "^0.3.12",
+    "typescript": "^1.8.9",
+    "typings": "^0.7.9",
+    "webpack": "^1.12.14"
+  }
+}
