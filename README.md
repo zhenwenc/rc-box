@@ -1,4 +1,4 @@
-# TWRAP
+# RC-BOX
 
 A React table data manipulator / wrapper for TS/JS projects!
 
@@ -9,7 +9,7 @@ A React table data manipulator / wrapper for TS/JS projects!
 To install the latest version:
 
 ```bash
-$ npm install --save-dev twrap
+$ npm install --save-dev rc-box
 ```
 
 Most likely you'll also need [the Immutable.js](https://github.com/facebook/immutable-js) library.
@@ -20,15 +20,15 @@ $ npm install --save-dev immutable
 
 ## Documentation
 
-[Read the docs](http://twrap.js.org)!
+[Read the docs](http://rc-box.js.org)!
 
 ## Contributing
 
-If you'd like to contribute to TWRAP, you'll need to run the following commands to get your environment set up:
+If you'd like to contribute to rc-box, you'll need to run the following commands to get your environment set up:
 
 ```bash
-$ git clone https://github.com/zhenwenc/twrap.git
-$ cd twrap                  # go to the twrap directory
+$ git clone https://github.com/zhenwenc/rc-box.git
+$ cd rc-box                  # go to the rc-box directory
 $ npm install               # install local npm build / test dependencies
 
 # Available scripts:
@@ -46,4 +46,4 @@ source files when a change occurs. The output files are written to the `/dist/` 
 
 ## License
 
-`TWRAP` is [MIT-licensed](./LICENSE).
+`RC-BOX` is [MIT-licensed](./LICENSE).

@@ -1,5 +1,5 @@
 {
-  "name": "twrap",
+  "name": "rc-box",
   "version": false,
   "ambientDependencies": {
     "assertion-error": "github:DefinitelyTyped/DefinitelyTyped/assertion-error/assertion-error.d.ts#dade4414712ce84e3c63393f1aae407e9e7e6af7",

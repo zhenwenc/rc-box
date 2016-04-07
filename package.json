@@ -1,5 +1,5 @@
 {
-  "name": "twrap",
+  "name": "rc-box",
   "version": "0.1.0",
   "description": "A React table data manipulator",
   "main": "./lib/index.js",
@@ -24,16 +24,16 @@
     "docs": "npm run docs:clean && npm run docs:build",
     "docs:clean": "rimraf doc",
     "docs:build": "typedoc --out docs --options typedoc.json --exclude '**/*.spec.ts' ./src/",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME docs && cd docs && git init && git commit --allow-empty -m 'update docs' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update docs' && git push git@github.com:zhenwenc/twrap gh-pages --force",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME docs && cd docs && git init && git commit --allow-empty -m 'update docs' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update docs' && git push git@github.com:zhenwenc/rc-box gh-pages --force",
     "prepublish": "npm run build && babel dist/src --presets babel-preset-es2015 --out-dir lib && rsync -avm --include='*.d.ts' -f 'hide,! */' dist/src/ lib && npm run docs",
     "publishLocal": "npm pack"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zhenwenc/twrap.git"
+    "url": "https://github.com/zhenwenc/rc-box.git"
   },
   "keywords": [
-    "twrap",
+    "rc-box",
     "table",
     "table module",
     "typescript",
@@ -44,9 +44,9 @@
   "author": "Zhenwen Cai <frederickcai@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zhenwenc/twrap/issues"
+    "url": "https://github.com/zhenwenc/rc-box/issues"
   },
-  "homepage": "http://twrap.js.org",
+  "homepage": "http://rc-box.js.org",
   "devDependencies": {
     "awesome-typescript-loader": "^0.17.0-rc.5",
     "babel-cli": "^6.6.5",
