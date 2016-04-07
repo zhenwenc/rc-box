@@ -67,6 +67,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "lodash": "^4.6.1",
+    "material-ui": "^0.15.0-alpha.2",
     "mocha": "^2.4.5",
     "ntypescript": "^1.201603270104.1",
     "phantomjs-prebuilt": "^2.1.7",

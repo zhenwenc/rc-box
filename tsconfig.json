@@ -24,6 +24,7 @@
         "rewriteTsconfig": true
     },
     "files": [
+        "typings/browser.d.ts",
         "src/index.ts",
         "src/DataTable.tsx",
         "src/DataTableColumn.tsx",
