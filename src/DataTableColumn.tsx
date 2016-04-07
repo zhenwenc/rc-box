@@ -17,7 +17,7 @@ export class Column extends Component<ColumnDef, any> {
   static __DataTableColumn__ = true
 
   render() {
-    if ('development' === ENV) {
+    if ('development' === process.env.NODE_ENV) {
       throw new Error('<TableColumn /> should never be rendered!')
     }
     return null
