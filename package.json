@@ -21,6 +21,8 @@
     "watch": "npm run watch:test",
     "watch:test": "npm test -- --auto-watch --no-single-run",
     "typings-install": "typings install",
+    "server": "PORT=9090 webpack-dev-server --config webpack.config.js --inline --progress --profile --colors --watch --display-error-details --display-cached --hot --content-base dist/",
+    "start": "npm run server",
     "docs": "npm run docs:clean && npm run docs:build",
     "docs:clean": "rimraf doc",
     "docs:build": "typedoc --out docs --options typedoc.json --exclude '**/*.spec.ts' ./src/",
@@ -56,6 +58,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
+    "html-webpack-plugin": "^2.15.0",
     "immutable": "^3.7.6",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
@@ -71,12 +74,16 @@
     "mocha": "^2.4.5",
     "ntypescript": "^1.201603270104.1",
     "phantomjs-prebuilt": "^2.1.7",
+    "react": "^0.14.8",
     "react-dom": "^0.14.8",
+    "react-tap-event-plugin": "^0.2.2",
     "should": "^8.2.2",
+    "source-map-loader": "^0.1.5",
     "ts-node": "^0.7.1",
     "typedoc": "^0.3.12",
     "typescript": "^1.8.9",
     "typings": "^0.7.9",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
   }
 }

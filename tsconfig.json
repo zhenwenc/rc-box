@@ -16,6 +16,7 @@
     "filesGlob": [
         "src/**/*.ts",
         "src/**/*.tsx",
+        "demo/**/*.tsx",
         "test/**/*.ts",
         "test/**/*.tsx",
         "typings/browser.d.ts"
@@ -28,6 +29,8 @@
         "src/index.ts",
         "src/DataTable.tsx",
         "src/DataTableColumn.tsx",
-        "src/MuiTableRenderer.tsx"
+        "src/MuiTableRenderer.tsx",
+        "demo/main.tsx",
+        "demo/SampleTable.tsx"
     ]
 }
