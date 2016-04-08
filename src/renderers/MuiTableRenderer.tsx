@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { Table, TableHeaderColumn, TableRow, TableHeader, TableRowColumn, TableBody } from 'material-ui'
-import { TableColumnData } from './DataTable'
+import { TableColumnData } from '../components'
 
 export function renderTableHeader(data: TableColumnData[]) {
   return (

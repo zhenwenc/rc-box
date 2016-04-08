@@ -1,3 +1,2 @@
-export * from './Datatable'
-export * from './DataTableColumn'
-export * from './MuiTableRenderer'
+export * from './components'
+export * from './renderers'

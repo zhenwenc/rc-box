@@ -26,10 +26,12 @@
     },
     "files": [
         "typings/browser.d.ts",
+        "src/components/index.ts",
         "src/index.ts",
-        "src/DataTable.tsx",
-        "src/DataTableColumn.tsx",
-        "src/MuiTableRenderer.tsx",
+        "src/renderers/index.ts",
+        "src/components/DataTable.tsx",
+        "src/components/DataTableColumn.tsx",
+        "src/renderers/MuiTableRenderer.tsx",
         "demo/main.tsx",
         "demo/SampleTable.tsx"
     ]

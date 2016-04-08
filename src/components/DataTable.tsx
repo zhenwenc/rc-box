@@ -12,7 +12,7 @@ import {
   renderTableHeader,
   renderTableRow,
   renderTable
-} from './MuiTableRenderer'
+} from '../renderers'
 
 export interface TableColumnData {
   /**
