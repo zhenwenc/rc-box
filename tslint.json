@@ -71,7 +71,7 @@
       "single"
     ],
     "radix": true,
-    "semicolon": false,
+    "semicolon": [false, "never"],
     "switch-default": true,
     "triple-equals": true,
     "typedef": [
