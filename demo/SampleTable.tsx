@@ -1,7 +1,16 @@
 import * as React from 'react'
 import { Component } from 'react'
 
-import { DataTable, Column } from '../src/index'
+import {
+  Divider,
+} from 'material-ui'
+
+import {
+  DataTable,
+  Column,
+  TableFilterPlugin,
+  TableToolbar,
+} from '../src/index'
 
 const tableRows = [
   {id: '1', name: 'John Smith', status: {content: 'Employed'}},
@@ -23,13 +32,36 @@ const tableRows = [
 ]
 
 export class SampleTable extends Component<any, any> {
+
+  handleSearchChange = (event: React.FormEvent, term: string) => {
+    this.setState({ filterTable: term })
+  }
+
+  getTerm = () => {
+    return this.state.filterTable
+  }
+
+  plugins = [
+    new TableFilterPlugin(this.getTerm)
+  ]
+
+  componentWillMount() {
+    this.setState({
+      filterTable: '',
+    })
+  }
+
   render() {
     return (
-      <DataTable data={tableRows}>
-        <Column header="ID" field={row => row.id} />
-        <Column header="Name" field={row => row.name} />
-        <Column header="Status" field={row => row.status.content} />
-      </DataTable>
+      <div>
+        <TableToolbar onSearchChange={this.handleSearchChange} />
+        <Divider />
+        <DataTable data={tableRows} plugins={this.plugins}>
+          <Column header="ID" field={row => row.id} />
+          <Column header="Name" field={row => row.name} />
+          <Column header="Status" field={row => row.status.content} />
+        </DataTable>
+      </div>
     )
   }
 }
