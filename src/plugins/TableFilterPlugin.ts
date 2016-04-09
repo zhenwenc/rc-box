@@ -22,11 +22,7 @@ import * as _ from 'lodash'
 import { Iterable } from 'immutable'
 import { TablePlugin, TableData } from './TableManager'
 
-export interface Comparator {
-  (v: any, term: any): boolean
-}
-
-export interface Selector {
+export interface TableFilterSelector {
   (rowData: any): Iterable<number, any>
 }
 
@@ -39,7 +35,7 @@ export interface Selector {
  * - Otherwise, it returns if they are equivalent, we use lodash#eq to
  *   perform the comparison.
  */
-const defaultComparator = (x: any, term: any) => {
+const defaultPredicate = (x: any, term: any) => {
   if (typeof x === 'string' && typeof term === 'string') {
     return x.toLowerCase().indexOf(term.toLowerCase()) > -1
   }
@@ -48,18 +44,18 @@ const defaultComparator = (x: any, term: any) => {
 
 export class TableFilterPlugin implements TablePlugin {
   /**
-   * @param getTerm    The function that returns the filter term. Commonly
-   *                   the filter term will be stored in the parent
-   *                   component's state.
-   * @param comparator The function that returns a predicate by comparing
-   *                   each table data element with the given filter term.
-   *                   This is the place where you can specify the custom
-   *                   filter function, otherwise the default comparator
-   *                   will be used.
+   * @param getTerm   The function that returns the filter term. Commonly
+   *                  the filter term will be stored in the parent
+   *                  component's state.
+   * @param predicate The function that returns a boolean by comparing
+   *                  each table data element with the given filter term.
+   *                  This is the place where you can specify the custom
+   *                  filter function, otherwise the default comparator
+   *                  will be used.
    */
   constructor(
     private getTerm: () => any,
-    private comparator = defaultComparator
+    private predicate = defaultPredicate
   ) {
     if (typeof this.getTerm === 'undefined') {
       throw new Error('[RCBOX] Expected getTerm function for filter plugin!')
@@ -78,14 +74,14 @@ export class TableFilterPlugin implements TablePlugin {
    * @param selector  The function to select the values in each table
    *                  row data to compare.
    */
-  handleFilter = (tableData: TableData, selector: Selector) => {
+  handleFilter = (tableData: TableData, selector: TableFilterSelector) => {
     const term = this.getTerm()
 
     if (_.isUndefined(term) || _.isEmpty(term)) {
       return tableData // no filter
     }
 
-    const predicate = v => this.comparator(v, term)
+    const predicate = v => this.predicate(v, term)
     return tableData.filter(rowData =>
       !selector(rowData).filter(predicate).isEmpty()
     ).toSeq()
