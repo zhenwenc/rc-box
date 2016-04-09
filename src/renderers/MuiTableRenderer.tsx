@@ -1,9 +1,22 @@
 import * as React from 'react'
 
-import { Table, TableHeaderColumn, TableRow, TableHeader, TableRowColumn, TableBody } from 'material-ui'
-import { TableColumnData } from '../components'
+import {
+  Table,
+  TableHeaderColumn,
+  TableRow,
+  TableHeader,
+  TableRowColumn,
+  TableBody,
+  CircularProgress,
+} from 'material-ui'
+import {
+  TableColumnData,
+  DataTableState,
+} from '../components'
 
-export function renderTableHeader(data: TableColumnData[]) {
+export function renderTableHeader(
+  data: TableColumnData[]
+) {
   return (
     <TableRow>
     {data.map((headerData, index) => {
@@ -18,7 +31,10 @@ export function renderTableHeader(data: TableColumnData[]) {
   )
 }
 
-export function renderTableRow(data: TableColumnData[], rowIndex: number) {
+export function renderTableRow(
+  data: TableColumnData[],
+  rowIndex: number
+) {
   return (
     <TableRow key={rowIndex}>
     {data.map((columnData, index) => {
@@ -33,7 +49,12 @@ export function renderTableRow(data: TableColumnData[], rowIndex: number) {
   )
 }
 
-export function renderTable(headerColumns: JSX.Element, rowColumns: JSX.Element[]) {
+export function renderTable(
+  tableHeader: JSX.Element,
+  tableRows: JSX.Element[],
+  rendererProps: any,
+  tableStates: DataTableState
+) {
   return (
     <Table selectable={false}>
       <TableHeader
@@ -41,10 +62,10 @@ export function renderTable(headerColumns: JSX.Element, rowColumns: JSX.Element[
         displaySelectAll={false}
         enableSelectAll={false}
       >
-        {headerColumns}
+        {tableHeader}
       </TableHeader>
       <TableBody displayRowCheckbox={false}>
-        {rowColumns}
+        {tableRows}
       </TableBody>
     </Table>
   )
