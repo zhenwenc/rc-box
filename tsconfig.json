@@ -10,15 +10,13 @@
         "rootDir": ".",
         "target": "es6",
         "outDir": "dist",
-        "moduleResolution": "classic",
+        "moduleResolution": "node",
         "noImplicitAny": false
     },
     "filesGlob": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
+        "src/**/*.{ts,tsx}",
+        "test/**/*.{ts,tsx}",
         "demo/**/*.tsx",
-        "test/**/*.ts",
-        "test/**/*.tsx",
         "typings/browser.d.ts"
     ],
     "atom": {
