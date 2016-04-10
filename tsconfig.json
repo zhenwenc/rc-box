@@ -32,7 +32,6 @@
         "src/plugins/TableFilterPlugin.ts",
         "src/plugins/TableManager.ts",
         "src/renderers/index.ts",
-        "src/renderers/MuiComponents.tsx",
         "src/renderers/MuiTableRenderer.tsx",
         "src/renderers/MuiToolsRenderer.tsx",
         "demo/main.tsx",
