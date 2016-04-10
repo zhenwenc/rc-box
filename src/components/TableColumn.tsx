@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as React from 'react'
 import { Component } from 'react'
 
@@ -24,15 +25,9 @@ export class Column extends Component<ColumnDef, any> {
   }
 }
 
-export function mapColumnDef(child: any) {
+export function mapColumnDef(child: any): ColumnDef {
   if (!child.type.__DataTableColumn__) {
     throw new Error('DataTable: children should be <Column />')
   }
-
-  const def: ColumnDef = {
-    header: child.props.header,
-    field: child.props.field
-  }
-
-  return def
+  return _.merge({}, defaultColumnDef, child.props)
 }
