@@ -19,11 +19,16 @@
  */
 
 import * as _ from 'lodash'
-import { Iterable } from 'immutable'
+import { Iterable, List } from 'immutable'
 import { TablePlugin, TableData } from './TableManager'
+import { ColumnDef } from '../components/TableColumn'
 
 export interface TableFilterSelector {
   (rowData: any): Iterable<number, any>
+}
+
+export interface TableFilterPredicate {
+  (x: any, term: any): boolean
 }
 
 /**
@@ -43,16 +48,6 @@ const defaultPredicate = (x: any, term: any) => {
 }
 
 export class TableFilterPlugin implements TablePlugin {
-  /**
-   * @param getTerm   The function that returns the filter term. Commonly
-   *                  the filter term will be stored in the parent
-   *                  component's state.
-   * @param predicate The function that returns a boolean by comparing
-   *                  each table data element with the given filter term.
-   *                  This is the place where you can specify the custom
-   *                  filter function, otherwise the default comparator
-   *                  will be used.
-   */
   constructor(
     private getTerm: () => any,
     private predicate = defaultPredicate
@@ -74,17 +69,41 @@ export class TableFilterPlugin implements TablePlugin {
    * @param selector  The function to select the values in each table
    *                  row data to compare.
    */
-  handleFilter = (tableData: TableData, selector: TableFilterSelector) => {
+  process(tableData: TableData, columns: List<ColumnDef>) {
     const term = this.getTerm()
+    const selector = rowData => columns.map(s => s.field(rowData))
 
     if (_.isUndefined(term) || _.isEmpty(term)) {
       return tableData // no filter
     }
 
     const predicate = v => this.predicate(v, term)
-    return tableData.filter(rowData =>
+    const filtered = tableData.filter(rowData =>
       !selector(rowData).filter(predicate).isEmpty()
-    ).toSeq()
-  }
+    )
 
+    return filtered
+  }
+}
+
+/**
+ * Returns an instance of table filter plugin.
+ *
+ * @param getTerm   The function that returns the filter term. Commonly
+ *                  the filter term will be stored in the parent
+ *                  component's state.
+ * @param predicate The function that returns a boolean by comparing
+ *                  each table data element with the given filter term.
+ *                  This is the place where you can specify the custom
+ *                  filter function, otherwise the default comparator
+ *                  will be used.
+ */
+export function createTableFilterPlugin(settings: {
+  getTerm: () => any
+  predicate?: TableFilterPredicate
+}) {
+  return new TableFilterPlugin(
+    settings.getTerm,
+    settings.predicate
+  )
 }

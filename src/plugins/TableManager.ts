@@ -1,14 +1,15 @@
-import * as _ from 'lodash'
-import { List, Seq } from 'immutable'
+import { Iterable, List, Seq } from 'immutable'
 
-import { TableFilterPlugin } from './TableFilterPlugin'
 import { ColumnDef } from '../components/TableColumn'
 
 export type RawTableData = Seq<number, any> | any[]
-export type TableData = Seq<number, any>
+export type TableData = Iterable<number, any>
 
 export interface TablePlugin {
   priority: number,
+  process: {
+    (data: TableData, columns: List<ColumnDef>)
+  }
 }
 
 export class TableManager {
@@ -42,21 +43,8 @@ export class TableManager {
   }
 
   private process(data: TableData): TableData {
-    const reducer = (result: TableData, plugin: TablePlugin) => {
-      if (plugin instanceof TableFilterPlugin) {
-        return this.processTableFilter(plugin, data)
-      }
-      else if (process.env.ENV === 'development') {
-        throw new Error(`[RCBOX] Unknown plugin [${plugin}]`)
-      }
-      else return result
-    }
-    // TODO Can we rewrite this with ImmutableJS functions?
-    return _.reduce(this.plugins.toArray(), reducer, data)
-  }
-
-  private processTableFilter(plugin: TableFilterPlugin, data: TableData) {
-    const selector = rowData => this.columns.map(s => s.field(rowData))
-    return plugin.handleFilter(data, selector)
+    return this.plugins.reduce(
+      (result, plugin) => plugin.process(data, this.columns), data
+    )
   }
 }
