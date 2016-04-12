@@ -37,6 +37,8 @@
         "src/renderers/index.ts",
         "src/renderers/MuiTableRenderer.tsx",
         "src/renderers/MuiToolsRenderer.tsx",
+        "src/utils/index.ts",
+        "src/utils/SortingState.ts",
         "demo/main.tsx",
         "demo/SampleTable.tsx"
     ]
