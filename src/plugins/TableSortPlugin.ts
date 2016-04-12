@@ -10,7 +10,7 @@ import { TablePlugin } from './TablePlugin'
 import { TableData } from './TableManager'
 import { ColumnDef } from '../components/TableColumn'
 
-export enum SortOrder { ASC, DESC, NONE }
+export enum SortOrder { NONE, ASC, DESC }
 
 export type TableSortOrder = () => SortOrder
 
