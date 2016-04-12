@@ -9,7 +9,7 @@
     "mocha": "github:DefinitelyTyped/DefinitelyTyped/mocha/mocha.d.ts#dade4414712ce84e3c63393f1aae407e9e7e6af7",
     "node": "registry:dt/node#4.0.0+20160330064709",
     "react": "registry:dt/react#0.14.0+20160319053454",
-    "react-addons-update": "registry:dt/react-addons-update#0.14.0+20160316155526",
+    "react-addons-test-utils": "registry:dt/react-addons-test-utils#0.14.0+20160316155526",
     "react-dom": "registry:dt/react-dom#0.14.0+20160316155526",
     "react-global": "registry:dt/react-global#0.14.0+20160316155526",
     "react-tap-event-plugin": "registry:dt/react-tap-event-plugin#0.0.0+20160226083632"
