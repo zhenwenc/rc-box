@@ -11,10 +11,14 @@ import {
   RawTableData,
 } from '../plugins'
 import {
+  MuiTable,
+} from '../renderers'
+
+const {
   renderTableHeader,
   renderTableRow,
   renderTable,
-} from '../renderers'
+} = MuiTable
 
 export interface TableColumnData {
   /**
