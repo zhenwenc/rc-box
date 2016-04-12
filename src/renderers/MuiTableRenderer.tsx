@@ -34,13 +34,14 @@ export module MuiTable {
     {data.map((headerData, index) => {
       const { cellData, columnDef } = headerData
       const { sortable, onHeaderTouch } = columnDef
+      const order = sortable && sortable.order()
 
       const styles = {content: {
         cursor: !!sortable
           ? 'pointer'
           : 'auto',
-        backgroundImage: !!sortable
-          ? `url('${sortingImage.get(sortable.order())}')`
+        backgroundImage: typeof order !== 'undefined'
+          ? `url('${sortingImage.get(order)}')`
           : undefined,
         backgroundPosition: 'right',
         backgroundRepeat: 'no-repeat',
@@ -92,12 +93,6 @@ export module MuiTable {
         {tableRows}
       </TableBody>
     </Table>
-  )
-
-  export const sortableHeader = (
-    cellData: any, onSortChange: Function
-  ) => (
-    <div onClick={onSortChange}>{cellData}</div>
   )
 
 }
