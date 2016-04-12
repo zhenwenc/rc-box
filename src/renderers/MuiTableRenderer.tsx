@@ -7,17 +7,18 @@ import {
   TableHeader,
   TableRowColumn,
   TableBody,
-  CircularProgress,
 } from 'material-ui'
+
 import {
   TableColumnData,
   DataTableState,
 } from '../components'
 
-export function renderTableHeader(
-  data: TableColumnData[]
-) {
-  return (
+export module MuiTable {
+
+  export const renderTableHeader = (
+    data: TableColumnData[]
+  ) => (
     <TableRow>
     {data.map((headerData, index) => {
       const { cellData } = headerData
@@ -29,13 +30,11 @@ export function renderTableHeader(
     })}
     </TableRow>
   )
-}
 
-export function renderTableRow(
-  data: TableColumnData[],
-  rowIndex: number
-) {
-  return (
+  export const renderTableRow = (
+    data: TableColumnData[],
+    rowIndex: number
+  ) => (
     <TableRow key={rowIndex}>
     {data.map((columnData, index) => {
       const { cellData } = columnData
@@ -47,15 +46,13 @@ export function renderTableRow(
     })}
     </TableRow>
   )
-}
 
-export function renderTable(
-  tableHeader: JSX.Element,
-  tableRows: JSX.Element[],
-  rendererProps: any,
-  tableStates: DataTableState
-) {
-  return (
+  export const renderTable = (
+    tableHeader: JSX.Element,
+    tableRows: JSX.Element[],
+    rendererProps: any,
+    tableStates: DataTableState
+  ) => (
     <Table selectable={false}>
       <TableHeader
         adjustForCheckbox={false}
@@ -69,4 +66,11 @@ export function renderTable(
       </TableBody>
     </Table>
   )
+
+  export const sortableHeader = (
+    cellData: any, onSortChange: Function
+  ) => (
+    <div onClick={onSortChange}>{cellData}</div>
+  )
+
 }
