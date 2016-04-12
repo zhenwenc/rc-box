@@ -27,7 +27,6 @@
         "src/components/DataTable.tsx",
         "src/components/index.ts",
         "src/components/TableColumn.tsx",
-        "src/constants/index.ts",
         "src/index.ts",
         "src/plugins/index.ts",
         "src/plugins/TableFilterPlugin.ts",
