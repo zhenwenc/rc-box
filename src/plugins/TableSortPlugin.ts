@@ -6,34 +6,55 @@
 
 import * as _ from 'lodash'
 import { List, Iterable } from 'immutable'
-import { TablePlugin, TableData } from './TableManager'
+import { TablePlugin } from './TablePlugin'
+import { TableData } from './TableManager'
 import { ColumnDef } from '../components/TableColumn'
 
+export enum SortOrder { ASC, DESC, NONE }
+
+export type TableSortOrder = SortOrder | (() => SortOrder)
+
 export interface TableColumnSorter {
-  enabled: boolean | (() => boolean)
+  order: TableSortOrder
   comparator?: (a: any, b: any) => number
 }
 
 export interface TableSorter {
-  enabled: boolean | (() => boolean)
+  order: TableSortOrder
   selector: (rowData: any) => any
   comparator: (a: any, b: any) => number
 }
 
-export const defaultTableColumnSorter = {
-  enabled: false,
-  comparator: undefined,
+const defaultComparator = (a: any, b: any) => {
+  return _.eq(a, b) ? 0 : a < b ? -1 : 1
 }
 
-const defaultComparator = (a: any, b: any) => {
-  return a === b ? 0 : a < b ? -1 : 1
+const numberComparator = (a: any, b: any) => {
+  const [va, vb] = [_.toNumber(a), _.toNumber(b)]
+  return va === vb ? 1 : _.lt(va, vb) ? -1 : 1
 }
 
 export class TableSortPlugin implements TablePlugin {
-  constructor(
-    private sorters = List<TableSorter>(),
-    private multiSortable = false
-  ) {}
+  /**
+   * Optional list of custom sorters. NOTE: here is the place
+   * where you can perform customized table sorting functionality,
+   * i.e. sort with complex business logic.
+   */
+  private sorters: List<TableSorter>
+
+  /**
+   * Enable the plugin to sort by multiple sorter if possible,
+   * The default value is false.
+   */
+  private multiSortable: boolean
+
+  constructor(options: {
+    sorters?: TableSorter[]
+    multiSortable?: boolean
+  } = {}) {
+    this.sorters = List(options.sorters)
+    this.multiSortable = options.multiSortable
+  }
 
   get priority() { return 200 }
 
@@ -47,48 +68,60 @@ export class TableSortPlugin implements TablePlugin {
    */
   process(tableData: TableData, columns: List<ColumnDef>) {
     const columnSorters: Iterable<number, TableSorter> = columns
+      .filterNot(s => _.isUndefined(s.sortable))
       .map(columnDef => {
         const sorter     = columnDef.sortable
         const selector   = columnDef.field
-        const enabled    = sorter.enabled
-        const comparator = sorter.comparator || defaultComparator
+        const type       = columnDef.type
+        const order      = sorter.order
+        const comparator = sorter.comparator || this.getComparator(type)
 
-        return { enabled, selector, comparator }
+        return { order, selector, comparator }
       })
 
     const sorters = this.sorters.concat(columnSorters)
-      .filter(s => _.isBoolean(s.enabled) ? s.enabled : s.enabled())
+      .filter(s => this.getSortOrder(s.order) !== SortOrder.NONE)
+
+    if (sorters.size > 1 && !this.multiSortable) {
+      if (process.env.NODE_ENV === 'development') {
+        throw new Error(`[RCBOX] Found multiple sorter enabled while this` +
+          `feature is disabled. To enable this feature, set 'multiSortable' ` +
+          `property to 'true' on TableSortPlugin. Those unexpected sorters ` +
+          `are: ${sorters.toJS()}`)
+      }
+      // NOTE: Returns unsorted table data as fallback to avoid uncertain
+      //       data will be used in production environment.
+      return tableData
+    }
 
     const sorted = tableData.sort((row1, row2) => {
       const reducer = (result: number, sorter: TableSorter) => {
-        const selector = sorter.selector
-        const comparator = sorter.comparator
+        const { selector, comparator } = sorter
+        const order = this.getSortOrder(sorter.order)
+        const factor = order === SortOrder.DESC ? -1 : 1
+
         return result !== 0
           ? result
-          : comparator(selector(row1), selector(row2))
+          : comparator(selector(row1), selector(row2)) * factor
       }
       return sorters.reduce(reducer, 0)
     })
 
     return sorted
   }
-}
 
-/**
- * Returns an instance of table sort plugin.
- *
- * @param sorters       Optional list of custom sorters. NOTE: here is the
- *                      place where you can perform customized table sorting
- *                      functionality, i.e. sort with business logic.
- * @param multiSortable Enable the plugin to sort by multiple sorter if
- *                      possible, default false.
- */
-export function createTableSortPlugin(settings: {
-  sorters?: TableSorter[]
-  multiSortable?: boolean
-}) {
-  return new TableSortPlugin(
-    List(settings.sorters || []),
-    settings.multiSortable
-  )
+  private getComparator(columnType: string) {
+    switch (columnType.toLowerCase()) {
+      case 'number':
+        return numberComparator
+      default:
+        return defaultComparator
+    }
+  }
+
+  private getSortOrder(order: TableSortOrder) {
+    return _.isUndefined(order)
+      ? SortOrder.NONE
+      : _.isFunction(order) ? order() : order
+  }
 }

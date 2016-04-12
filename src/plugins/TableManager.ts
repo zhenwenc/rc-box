@@ -1,16 +1,10 @@
 import { Iterable, List, Seq } from 'immutable'
 
-import { ColumnDef } from '../components/TableColumn'
+import { ColumnDef } from '../components'
+import { TablePlugin } from './TablePlugin'
 
 export type RawTableData = Seq<number, any> | any[]
 export type TableData = Iterable<number, any>
-
-export interface TablePlugin {
-  priority: number,
-  process: {
-    (data: TableData, columns: List<ColumnDef>)
-  }
-}
 
 export class TableManager {
   private plugins: List<TablePlugin>

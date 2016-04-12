@@ -1,10 +1,8 @@
-import * as _ from 'lodash'
 import * as React from 'react'
 
 import { Component } from 'react'
 import {
   TableColumnSorter,
-  defaultTableColumnSorter,
 } from '../plugins/TableSortPlugin'
 
 export interface ColumnDef {
@@ -28,14 +26,23 @@ export interface ColumnDef {
   sortable?: TableColumnSorter
 
   /**
-   * The data type of the column. The default value is String.
+   * The datatype of the column. The reserved column datatype for
+   * the plugins in this library are (case insensitive):
+   *
+   * [string, number, date],
+   *
+   * any othere value (include undefined) will be fallback to string.
+   *
+   * NOTE: You can specify your own datatye which will be used for the
+   *       custom plugins.
    */
-  type?: ColumnType
-}
+  type?: string
 
-const defaultColumnDef = {
-  sortable: defaultTableColumnSorter,
-  type: ColumnType.String,
+  /**
+   * Other custom column definitions. This allow users to specify
+   * configurations for the custom plugin.
+   */
+  [other: string]: any
 }
 
 export class Column extends Component<ColumnDef, any> {
@@ -53,5 +60,5 @@ export function mapColumnDef(child: any): ColumnDef {
   if (!child.type.__DataTableColumn__) {
     throw new Error('DataTable: children should be <Column />')
   }
-  return _.merge({}, defaultColumnDef, child.props)
+  return Object.assign({}, child.props)
 }
