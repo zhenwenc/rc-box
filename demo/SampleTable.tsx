@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Component } from 'react'
+import { Map, List } from 'immutable'
 
 import {
   Divider,
@@ -8,9 +9,14 @@ import {
 import {
   DataTable,
   Column,
-  TableFilterPlugin,
   TableToolbar,
+  TableFilterPlugin,
+  TableSortPlugin,
+  SortOrder,
+  MuiTable,
 } from '../src/index'
+
+const { sortableHeader } = MuiTable
 
 const tableRows = [
   {id: '1', name: 'John Smith', status: {content: 'Employed'}},
@@ -31,23 +37,41 @@ const tableRows = [
   {id: '16', name: 'Fake', status: {content: 'Employed'}},
 ]
 
-export class SampleTable extends Component<any, any> {
+export interface SampleTableState {
+  filterTerm?: string
+  sortColumn?: Map<string, SortOrder>
+}
+
+export class SampleTable extends Component<{}, SampleTableState> {
 
   handleSearchChange = (event: React.FormEvent, term: string) => {
-    this.setState({ filterTable: term })
-  }
-
-  getTerm = () => {
-    return this.state.filterTable
+    this.setState({ filterTerm: term })
   }
 
   plugins = [
-    new TableFilterPlugin(this.getTerm)
+    new TableFilterPlugin({
+      readTerm: () => this.state.filterTerm,
+    }),
+    new TableSortPlugin()
   ]
+
+  handleSortChange(key: string) {
+    return (event: React.TouchEvent) => {
+      console.log('yo! touched!');
+      this.setState(({ sortColumn }) => ({
+        sortColumn: sortColumn.set(key, sortColumn.get(key) === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC),
+      }))
+    }
+  }
 
   componentWillMount() {
     this.setState({
-      filterTable: '',
+      filterTerm: '',
+      sortColumn: Map({
+        'id': SortOrder.NONE,
+        'name:': SortOrder.NONE,
+        'status': SortOrder.NONE,
+      }),
     })
   }
 
@@ -57,9 +81,22 @@ export class SampleTable extends Component<any, any> {
         <TableToolbar onSearchChange={this.handleSearchChange} />
         <Divider />
         <DataTable data={tableRows} plugins={this.plugins}>
-          <Column header="ID" field={row => row.id} />
-          <Column header="Name" field={row => row.name} />
-          <Column header="Status" field={row => row.status.content} />
+          <Column
+            header={sortableHeader('ID', this.handleSortChange('id'))}
+            field={row => row.id}
+            type={'number'}
+            sortable={{
+              order: () => this.state.sortColumn.get('id'),
+            }}
+          />
+          <Column
+            header={sortableHeader('Name', this.handleSortChange('name'))}
+            field={row => row.name}
+          />
+          <Column
+            header={sortableHeader('Status', this.handleSortChange('status'))}
+            field={row => row.status.content}
+          />
         </DataTable>
       </div>
     )
