@@ -12,7 +12,7 @@ import { ColumnDef } from '../components/TableColumn'
 
 export enum SortOrder { ASC, DESC, NONE }
 
-export type TableSortOrder = SortOrder | (() => SortOrder)
+export type TableSortOrder = () => SortOrder
 
 export interface TableColumnSorter {
   order: TableSortOrder
@@ -111,7 +111,7 @@ export class TableSortPlugin implements TablePlugin {
   }
 
   private getComparator(columnType: string) {
-    switch (columnType.toLowerCase()) {
+    switch (_.toLower(columnType)) {
       case 'number':
         return numberComparator
       default:
@@ -122,6 +122,6 @@ export class TableSortPlugin implements TablePlugin {
   private getSortOrder(order: TableSortOrder) {
     return _.isUndefined(order)
       ? SortOrder.NONE
-      : _.isFunction(order) ? order() : order
+      : order() || SortOrder.NONE
   }
 }
