@@ -19,7 +19,7 @@
       2
     ],
     "interface-name": [
-      "never-prefix"
+      false, "never-prefix"
     ],
     "jsdoc-format": true,
     "label-position": true,
@@ -61,7 +61,7 @@
     "no-unused-expression": true,
     "no-unused-variable": true,
     "no-use-before-declare": true,
-    "no-var-requires": true,
+    "no-var-requires": false,
     "one-line": [
       true,
       "check-open-brace",
