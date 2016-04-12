@@ -11,14 +11,16 @@
       "check-space",
       "check-uppercase"
     ],
-    "curly": [false, "multi-line"],
+    "curly": false,
     "eofline": true,
     "forin": true,
     "indent": [
       true,
       2
     ],
-    "interface-name": false,
+    "interface-name": [
+      "never-prefix"
+    ],
     "jsdoc-format": true,
     "label-position": true,
     "label-undefined": true,
@@ -68,7 +70,8 @@
     ],
     "quotemark": [
       true,
-      "single"
+      "single",
+      "jsx-double"
     ],
     "radix": true,
     "semicolon": [false, "never"],
@@ -87,7 +90,7 @@
         "variable-declaration": "nospace"
       }
     ],
-    "use-strict": false,
+    "use-strict": ["check-module"],
     "variable-name": [
       true,
       "allow-leading-underscore"
