@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as React from 'react'
 
 import {
@@ -14,6 +15,16 @@ import {
   DataTableState,
 } from '../components'
 
+import {
+  SortOrder
+} from '../plugins'
+
+const sortingImage = new Map([
+  [SortOrder.NONE, require('../images/sorting-both.png')],
+  [SortOrder.DESC, require('../images/sorting-desc.png')],
+  [SortOrder.ASC,  require('../images/sorting-asc.png')],
+])
+
 export module MuiTable {
 
   export const renderTableHeader = (
@@ -21,10 +32,26 @@ export module MuiTable {
   ) => (
     <TableRow>
     {data.map((headerData, index) => {
-      const { cellData } = headerData
+      const { cellData, columnDef } = headerData
+      const { sortable, onHeaderTouch } = columnDef
+
+      const styles = {content: {
+        cursor: !!sortable
+          ? 'pointer'
+          : 'auto',
+        backgroundImage: !!sortable
+          ? `url('${sortingImage.get(sortable.order())}')`
+          : undefined,
+        backgroundPosition: 'right',
+        backgroundRepeat: 'no-repeat',
+        textDecoration: 'none',
+      }}
+
       return (
         <TableHeaderColumn key={`col-${index}`}>
-          {cellData}
+          <div style={styles.content} onClick={onHeaderTouch}>
+            {cellData}
+          </div>
         </TableHeaderColumn>
       )
     })}
