@@ -58,6 +58,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
+    "file-loader": "^0.8.5",
     "html-webpack-plugin": "^2.15.0",
     "immutable": "^3.7.6",
     "karma": "^0.13.22",
@@ -84,6 +85,7 @@
     "typedoc": "^0.3.12",
     "typescript": "^1.9.0-dev.20160408",
     "typings": "^0.7.9",
+    "url-loader": "^0.5.7",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
   }

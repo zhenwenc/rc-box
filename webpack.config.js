@@ -47,6 +47,10 @@ module.exports = {
         loader: 'awesome-typescript-loader',
         exclude: [/\.(spec|e2e)\.ts$/],
       },
+      {
+        test: /\.png?$/,
+        loader: 'url-loader?mimetype=image/png',
+      },
     ],
 
     postLoaders: [
