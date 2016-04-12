@@ -4,7 +4,11 @@ import * as React from 'react'
 import { Component } from 'react'
 import { Seq, List } from 'immutable'
 
-import { ColumnDef, mapColumnDef } from './TableColumn'
+import {
+  ColumnDef,
+  ColumnData,
+  mapColumnDef
+} from './TableColumn'
 import {
   TableManager,
   TablePlugin,
@@ -19,18 +23,6 @@ const {
   renderTableRow,
   renderTable,
 } = MuiTable
-
-export interface TableColumnData {
-  /**
-   * Data for this table cell.
-   */
-  cellData: any
-
-  /**
-   * Definition object for this column.
-   */
-  columnDef: ColumnDef
-}
 
 export interface DataTableProps {
 
@@ -51,7 +43,7 @@ export interface DataTableProps {
    * Renderer function for the table header columns.
    */
   headerRenderer?: {
-    (data: TableColumnData[]): JSX.Element
+    (data: ColumnData[]): JSX.Element
   }
 
   /**
@@ -68,7 +60,7 @@ export interface DataTableProps {
    * Renderer function for each row.
    */
   rowRenderer?: {
-    (data: TableColumnData[], rowIndex: number): JSX.Element
+    (data: ColumnData[], rowIndex: number): JSX.Element
   }
 
   /**

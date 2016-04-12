@@ -45,6 +45,18 @@ export interface ColumnDef {
   [other: string]: any
 }
 
+export interface ColumnData {
+  /**
+   * Data for this table cell.
+   */
+  cellData: any
+
+  /**
+   * Definition object for this column.
+   */
+  columnDef: ColumnDef
+}
+
 export class Column extends Component<ColumnDef, any> {
   static __DataTableColumn__ = true
 

@@ -10,14 +10,14 @@ import {
 } from 'material-ui'
 
 import {
-  TableColumnData,
+  ColumnData,
   DataTableState,
 } from '../components'
 
 export module MuiTable {
 
   export const renderTableHeader = (
-    data: TableColumnData[]
+    data: ColumnData[]
   ) => (
     <TableRow>
     {data.map((headerData, index) => {
@@ -32,7 +32,7 @@ export module MuiTable {
   )
 
   export const renderTableRow = (
-    data: TableColumnData[],
+    data: ColumnData[],
     rowIndex: number
   ) => (
     <TableRow key={rowIndex}>
