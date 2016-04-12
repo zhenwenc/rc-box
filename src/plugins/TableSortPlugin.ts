@@ -2,6 +2,36 @@
  * This is designed as a plugin for the React DataTable component to
  * provide functionality that filter by single column. This plugin
  * should also compatible with most other component, such as List.
+ *
+ * How it works?
+ *
+ * There are 2 ways to set up sorting table sorting handlers:
+ *
+ * 1. Sort by column, which you need to specify `sortable` property
+ *    in the DataTable Column component, see #TableColumnSorter for
+ *    available configurations. This is the typical usage for this
+ *    plugin.
+ *
+ * 2. Sort by whatever you like! In some case an application need to
+ *    sort table data with complicated business logic. If thats the
+ *    case, you need to specify the list of custom sorters when
+ *    initializing this plugin, see #TableSorter for available
+ *    configurations.
+ *
+ * Q: How to define my custom sorter?
+ *
+ *  - The custom sorter needs to implements the TableSorter interface,
+ *    and specify in this plugin's constructor.
+ *
+ * Q: How to enable sort by multiple sorter?
+ *
+ *  - Set `options#multiSortable` to `true` when initializing the
+ *    plugin. The sorters are processed in the order that it is
+ *    been defined, while custom sorter have the highest priority.
+ *
+ * Q: What function the table used to perform sorting?
+ *
+ *  - This plugin is using Iterable#sort function in ImmutableJS.
  */
 
 import * as _ from 'lodash'
@@ -15,13 +45,44 @@ export enum SortOrder { NONE, ASC, DESC }
 export type TableSortOrder = () => SortOrder
 
 export interface TableColumnSorter {
+  /**
+   * A function that returns the order the column should be sorted.
+   * The default value is SortOrder#NONE.
+   *
+   * NOTE: The sorting order should be stored in the DataTable
+   *       component's state, so that the table will be rerendered
+   *       when the order from any sorter is changed.
+   */
   order: TableSortOrder
+  /**
+   * Optional comparator function which is used to determin the order
+   * of each value pair.
+   *
+   * If this property is not set, the plugin will choose a default
+   * comparator base on the column's datatype.
+   */
   comparator?: (a: any, b: any) => number
 }
 
 export interface TableSorter {
+  /**
+   * A function that returns the order the column should be sorted.
+   * The same logic is applied as TableColumnSorter#order.
+   */
   order: TableSortOrder
+  /**
+   * A function that retruns the value from each table row data to be
+   * used in the sorting / comparator function.
+   *
+   * Unlike the TableColumnSorter where we can use the selector function
+   * defined in each Column component, the custom sorter let you choose
+   * what data you needed to perform sorting.
+   */
   selector: (rowData: any) => any
+  /**
+   * A comparator function which is used to determin the order of each
+   * value pair.
+   */
   comparator: (a: any, b: any) => number
 }
 
