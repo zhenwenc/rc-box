@@ -11,7 +11,8 @@
         "target": "es6",
         "outDir": "dist",
         "moduleResolution": "node",
-        "noImplicitAny": false
+        "noImplicitAny": false,
+        "sourceMap": true
     },
     "filesGlob": [
         "src/**/*.{ts,tsx}",
@@ -31,6 +32,7 @@
         "src/plugins/index.ts",
         "src/plugins/TableFilterPlugin.ts",
         "src/plugins/TableManager.ts",
+        "src/plugins/TablePlugin.ts",
         "src/plugins/TableSortPlugin.ts",
         "src/renderers/index.ts",
         "src/renderers/MuiTableRenderer.tsx",
