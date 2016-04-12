@@ -53,7 +53,7 @@ export class TableFilterPlugin implements TablePlugin {
    * The function that returns the filter term. Commonly the filter
    * term will be stored in the parent component's state.
    */
-  private readTerm: () => any
+  private term: () => any
 
   /**
    * The function that returns a boolean by comparing each table data
@@ -64,13 +64,13 @@ export class TableFilterPlugin implements TablePlugin {
   private predicate: TableFilterPredicate
 
   constructor(options: {
-    readTerm: () => any
+    term: () => any
     predicate?: TableFilterPredicate
   }) {
-    if (typeof options.readTerm === 'undefined') {
-      throw new Error('[RCBOX] Expected readTerm function for filter plugin!')
+    if (typeof options.term === 'undefined') {
+      throw new Error('[RCBOX] Expected term function for filter plugin!')
     }
-    this.readTerm = options.readTerm
+    this.term = options.term
     this.predicate = options.predicate || defaultPredicate
   }
 
@@ -87,7 +87,7 @@ export class TableFilterPlugin implements TablePlugin {
    *                  row data to compare.
    */
   process(tableData: TableData, columns: List<ColumnDef>) {
-    const term = this.readTerm()
+    const term = this.term()
     const selector = rowData => columns.map(s => s.field(rowData))
 
     if (_.isUndefined(term) || _.isEmpty(term)) {

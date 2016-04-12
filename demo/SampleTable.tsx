@@ -42,7 +42,7 @@ export class SampleTable extends Component<{}, SampleTableState> {
 
   plugins = [
     new TableFilterPlugin({
-      readTerm: () => this.state.filterTerm,
+      term: () => this.state.filterTerm,
     }),
     new TableSortPlugin()
   ]
