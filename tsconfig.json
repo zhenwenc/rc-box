@@ -40,6 +40,9 @@
         "src/renderers/MuiToolsRenderer.tsx",
         "src/tools/index.ts",
         "src/tools/SortingState.ts",
+        "src/utils/check.ts",
+        "src/utils/checkOption.ts",
+        "src/utils/index.ts",
         "demo/main.tsx",
         "demo/SampleTable.tsx"
     ]

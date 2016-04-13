@@ -22,7 +22,8 @@ import * as _ from 'lodash'
 import { Iterable, List } from 'immutable'
 import { TablePlugin } from './TablePlugin'
 import { TableData } from './TableManager'
-import { ColumnDef } from '../components/TableColumn'
+import { ColumnDef } from '../components'
+import { check } from '../utils'
 
 export interface TableFilterSelector {
   (rowData: any): Iterable<number, any>
@@ -67,9 +68,8 @@ export class TableFilterPlugin implements TablePlugin {
     term: () => any
     predicate?: TableFilterPredicate
   }) {
-    if (typeof options.term === 'undefined') {
-      throw new Error('[RCBOX] Expected term function for filter plugin!')
-    }
+    check(!_.isUndefined(options.term),
+      `Expected term function for filter plugin!`)
     this.term = options.term
     this.predicate = options.predicate || defaultPredicate
   }

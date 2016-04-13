@@ -1,5 +1,7 @@
+import * as _ from 'lodash'
 import { Map } from 'immutable'
 import { SortOrder } from '../plugins'
+import { check } from '../utils'
 
 const DEV = process.env.NODE_ENV === 'development'
 
@@ -10,10 +12,7 @@ export class SortingState {
   private states: Map<string, SortOrder>
 
   constructor(targets: string[]) {
-    if (typeof targets === 'undefined')
-      throw new Error(
-        `[RCBOX] ${this.constructor.name} must has at lease one target key.`
-      )
+    check(targets, `SortingState must have at lease one target key`)
 
     this.states = targets.reduce(
       (rs, nextKey) => rs.set(nextKey, NONE),
@@ -61,14 +60,12 @@ export class SortingState {
   }
 
   private checkKey(key: string) {
-    if (!this.states.has(key) && DEV) {
-      throw new Error(`[RCBOX] No state found with sorting key: [${key}]`)
-    }
+    check(this.states.has(key) || DEV,
+      `No state found with sorting key: [${key}]`)
   }
 
   private checkOrder(order: SortOrder) {
-    if (typeof order === 'undefined') {
-      throw new Error(`[RCBOX] Invalid sorting order: [${order}]`)
-    }
+    check(!_.isUndefined(order),
+      `Invalid sorting order: [${order}]`)
   }
 }
