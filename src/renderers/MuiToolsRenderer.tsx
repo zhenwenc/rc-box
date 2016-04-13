@@ -6,7 +6,7 @@ import {
   TextField,
 } from 'material-ui'
 
-export class TableToolbarProps {
+export interface TableToolbarProps {
   /**
    * Callback function that is fired when the search textfield'search
    * value changes.
@@ -49,4 +49,3 @@ export class TableToolbar extends Component<TableToolbarProps, any> {
     )
   }
 }
-
