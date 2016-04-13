@@ -21,6 +21,10 @@ export class SortingState {
     )
   }
 
+  getFn(key: string) {
+    return () => this.get(key)
+  }
+
   get(key: string) {
     this.checkKey(key)
     return this.states.get(key)

@@ -70,6 +70,8 @@ export class SampleTable extends Component<{}, SampleTableState> {
   }
 
   render() {
+    const { sortColumn } = this.state
+
     return (
       <div>
         <TableToolbar onSearchChange={this.handleSearchChange.bind(this)} />
@@ -79,13 +81,13 @@ export class SampleTable extends Component<{}, SampleTableState> {
             header="ID"
             field={row => row.id}
             type="number"
-            sortable={{order: () =>  this.state.sortColumn.get('id')}}
+            sortable={{order: sortColumn.getFn('id')}}
             onHeaderTouch={this.handleSortChange('id')}
           />
           <Column
             header="Name"
             field={row => row.name}
-            sortable={{order: () => this.state.sortColumn.get('name')}}
+            sortable={{order: sortColumn.getFn('name')}}
             onHeaderTouch={this.handleSortChange('name')}
           />
           <Column
