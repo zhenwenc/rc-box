@@ -38,7 +38,10 @@ export class TableManager {
 
   private process(data: TableData): TableData {
     return this.plugins.reduce(
-      (result, plugin) => plugin.process(data, this.columns), data
+      (result, plugin) =>
+        plugin.process(result, this.columns)
+      ,
+      data
     )
   }
 }
