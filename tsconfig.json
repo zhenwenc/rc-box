@@ -38,8 +38,8 @@
         "src/renderers/MuiFooterRenderer.tsx",
         "src/renderers/MuiTableRenderer.tsx",
         "src/renderers/MuiToolsRenderer.tsx",
-        "src/utils/index.ts",
-        "src/utils/SortingState.ts",
+        "src/tools/index.ts",
+        "src/tools/SortingState.ts",
         "demo/main.tsx",
         "demo/SampleTable.tsx"
     ]

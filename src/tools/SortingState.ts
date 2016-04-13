@@ -1,4 +1,3 @@
-import * as _ from 'lodash'
 import { Map } from 'immutable'
 import { SortOrder } from '../plugins'
 
@@ -11,9 +10,10 @@ export class SortingState {
   private states: Map<string, SortOrder>
 
   constructor(targets: string[]) {
-    if (typeof targets === 'undefined') {
-      throw new Error('[RCBOX] SortingState must has at lease one target key.')
-    }
+    if (typeof targets === 'undefined')
+      throw new Error(
+        `[RCBOX] ${this.constructor.name} must has at lease one target key.`
+      )
 
     this.states = targets.reduce(
       (rs, nextKey) => rs.set(nextKey, NONE),
