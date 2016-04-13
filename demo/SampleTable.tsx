@@ -9,6 +9,7 @@ import {
   DataTable,
   Column,
   TableToolbar,
+  TableFooter,
   TableFilterPlugin,
   TableSortPlugin,
   SortingState,
@@ -92,6 +93,8 @@ export class SampleTable extends Component<{}, SampleTableState> {
             field={row => row.status.content}
           />
         </DataTable>
+        <Divider />
+        <TableFooter />
       </div>
     )
   }

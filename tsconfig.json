@@ -35,6 +35,7 @@
         "src/plugins/TablePlugin.ts",
         "src/plugins/TableSortPlugin.ts",
         "src/renderers/index.ts",
+        "src/renderers/MuiFooterRenderer.tsx",
         "src/renderers/MuiTableRenderer.tsx",
         "src/renderers/MuiToolsRenderer.tsx",
         "src/utils/index.ts",
