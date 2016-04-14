@@ -37,10 +37,14 @@
 import * as _ from 'lodash'
 import { List, Iterable } from 'immutable'
 import { TablePlugin, TableData, ColumnDef } from '../core'
+import { SortingOrder } from './SortingOrder'
+import { SortingState } from './SortingState'
 
-export enum SortOrder { NONE, ASC, DESC }
+const { NONE, DESC } = SortingOrder
 
-export type TableSortOrder = () => SortOrder
+export interface TableSortOrder {
+  (): SortingOrder
+}
 
 export interface ColumnSorter {
   /**
@@ -93,7 +97,7 @@ const numberComparator = (a: any, b: any) => {
   return va === vb ? 1 : _.lt(va, vb) ? -1 : 1
 }
 
-export class TableSortPlugin implements TablePlugin {
+export class SortingPlugin implements TablePlugin {
   /**
    * Optional list of custom sorters. NOTE: here is the place
    * where you can perform customized table sorting functionality,
@@ -107,15 +111,24 @@ export class TableSortPlugin implements TablePlugin {
    */
   private multiSortable: boolean
 
+  /**
+   * Table sorting state helper.
+   */
+  private sortingState: SortingState
+
   constructor(options: {
+    keys: (string | [string, SortingOrder])[]
     sorters?: TableSorter[]
     multiSortable?: boolean
-  } = {}) {
+  }) {
     this.sorters = List(options.sorters)
     this.multiSortable = options.multiSortable
+    this.sortingState = new SortingState(this, options.keys)
   }
 
   get priority() { return 200 }
+
+  get state() { return this.sortingState }
 
   /**
    * Function that intented to be used by the table plugin manager to
@@ -139,7 +152,7 @@ export class TableSortPlugin implements TablePlugin {
       })
 
     const sorters = this.sorters.concat(columnSorters)
-      .filter(s => this.getSortOrder(s.order) !== SortOrder.NONE)
+      .filter(s => this.getSortOrder(s.order) !== NONE)
 
     if (sorters.size > 1 && !this.multiSortable) {
       if (process.env.NODE_ENV === 'development') {
@@ -157,7 +170,7 @@ export class TableSortPlugin implements TablePlugin {
       const reducer = (result: number, sorter: TableSorter) => {
         const { selector, comparator } = sorter
         const order = this.getSortOrder(sorter.order)
-        const factor = order === SortOrder.DESC ? -1 : 1
+        const factor = order === DESC ? -1 : 1
 
         return result !== 0
           ? result
@@ -180,7 +193,7 @@ export class TableSortPlugin implements TablePlugin {
 
   private getSortOrder(order: TableSortOrder) {
     return _.isUndefined(order)
-      ? SortOrder.NONE
-      : order() || SortOrder.NONE
+      ? NONE
+      : order() || NONE
   }
 }

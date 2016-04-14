@@ -10,12 +10,12 @@ import {
 } from 'material-ui'
 
 import { ColumnData, DataTableState } from '../core'
-import { SortOrder } from '../sorting'
+import { SortingOrder } from '../sorting'
 
 const sortingImage = new Map([
-  [SortOrder.NONE, require('./images/sorting-both.png')],
-  [SortOrder.DESC, require('./images/sorting-desc.png')],
-  [SortOrder.ASC,  require('./images/sorting-asc.png')],
+  [SortingOrder.NONE, require('./images/sorting-both.png')],
+  [SortingOrder.DESC, require('./images/sorting-desc.png')],
+  [SortingOrder.ASC,  require('./images/sorting-asc.png')],
 ])
 
 export module MuiTable {

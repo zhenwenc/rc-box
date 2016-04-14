@@ -1,2 +1,2 @@
-export * from './SortingState'
+export * from './SortingOrder'
 export * from './SortingPlugin'

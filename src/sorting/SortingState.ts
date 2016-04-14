@@ -1,26 +1,35 @@
 import * as _ from 'lodash'
 import { Map } from 'immutable'
 import { check } from '../utils'
-import { SortOrder } from './SortingPlugin'
+import { SortingOrder } from './SortingOrder'
+import { SortingPlugin } from './SortingPlugin'
 
 const DEV = process.env.NODE_ENV === 'development'
 
-const { NONE, ASC, DESC } = SortOrder
+const { NONE, ASC, DESC } = SortingOrder
 
 export class SortingState {
+  private plugin: SortingPlugin
+  private states: Map<string, SortingOrder>
 
-  private states: Map<string, SortOrder>
+  constructor(
+    self: SortingPlugin,
+    keys: (string | [string, SortingOrder])[] = []
+  ) {
+    check(keys, `SortingState must have at lease one target key`)
 
-  constructor(targets: string[]) {
-    check(targets, `SortingState must have at lease one target key`)
-
-    this.states = targets.reduce(
-      (rs, nextKey) => rs.set(nextKey, NONE),
-      Map<string, SortOrder>()
-    )
+    this.plugin = self
+    this.states = keys.reduce((rs, nextKey) => {
+      if (typeof nextKey === 'string') {
+        return rs.set(nextKey, NONE)
+      } else {
+        const [key, order] = nextKey
+        rs.set(key, order)
+      }
+    }, Map<string, SortingOrder>())
   }
 
-  getFn(key: string) {
+  fnGet(key: string) {
     return () => this.get(key)
   }
 
@@ -29,11 +38,11 @@ export class SortingState {
     return this.states.get(key)
   }
 
-  set(key: string, order: SortOrder) {
+  set(key: string, order: SortingOrder) {
     this.checkKey(key)
     this.checkOrder(order)
     this.states = this.states.set(key, order)
-    return this
+    return this.plugin
   }
 
   next(key: string) {
@@ -45,18 +54,18 @@ export class SortingState {
         : ASC
     this.resetAll()
     this.set(key, next)
-    return this
+    return this.plugin
   }
 
   reset(key: string) {
     this.checkKey(key)
     this.set(key, NONE)
-    return this
+    return this.plugin
   }
 
   resetAll() {
     this.states.keySeq().forEach(this.reset.bind(this))
-    return this
+    return this.plugin
   }
 
   private checkKey(key: string) {
@@ -64,7 +73,7 @@ export class SortingState {
       `No state found with sorting key: [${key}]`)
   }
 
-  private checkOrder(order: SortOrder) {
+  private checkOrder(order: SortingOrder) {
     check(!_.isUndefined(order),
       `Invalid sorting order: [${order}]`)
   }

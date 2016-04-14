@@ -41,6 +41,7 @@
         "src/renderers/MuiTableRenderer.tsx",
         "src/renderers/MuiToolsRenderer.tsx",
         "src/sorting/index.ts",
+        "src/sorting/SortingOrder.ts",
         "src/sorting/SortingPlugin.ts",
         "src/sorting/SortingState.ts",
         "src/utils/check.ts",
