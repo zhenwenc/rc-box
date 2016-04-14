@@ -1,7 +1,7 @@
-import { TablePagination } from '../plugins'
 import { check, checkOption } from '../utils'
+import { Pagination } from './PaginationPlugin'
 
-export class PaginationState implements TablePagination {
+export class PaginationState implements Pagination {
   private _pageSize: number
   private _currPage: number
 

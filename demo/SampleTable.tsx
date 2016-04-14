@@ -11,8 +11,8 @@ import {
   TablePlugin,
   TableToolbar,
   TableFooter,
-  TableFilterPlugin,
-  TablePaginationPlugin,
+  FilterPlugin,
+  PaginationPlugin,
   TableSortPlugin,
   SortingState,
   PaginationState,
@@ -67,10 +67,10 @@ export class SampleTable extends Component<{}, SampleTableState> {
     })
 
     const plugins = [
-      new TableFilterPlugin({
+      new FilterPlugin({
         term: () => this.state.filterTerm,
       }),
-      new TablePaginationPlugin(() => this.state.pagination),
+      new PaginationPlugin(() => this.state.pagination),
       new TableSortPlugin(),
     ]
 

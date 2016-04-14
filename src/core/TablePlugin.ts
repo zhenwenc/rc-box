@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import { ColumnDef } from '../components'
+import { ColumnDef } from './TableColumn'
 import { TableData } from './TableManager'
 
 export interface TablePlugin {

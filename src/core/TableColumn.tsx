@@ -1,9 +1,7 @@
 import * as React from 'react'
 
 import { Component } from 'react'
-import {
-  TableColumnSorter,
-} from '../plugins/TableSortPlugin'
+import { ColumnSorter } from '../sorting'
 
 export interface ColumnDef {
   /**
@@ -23,7 +21,7 @@ export interface ColumnDef {
    *
    * NOTE: TableSortPlugin is required.
    */
-  sortable?: TableColumnSorter
+  sortable?: ColumnSorter
 
   /**
    * The datatype of the column. The reserved column datatype for

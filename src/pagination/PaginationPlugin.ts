@@ -1,13 +1,11 @@
 import * as _ from 'lodash'
 import { List } from 'immutable'
-import { TablePlugin } from './TablePlugin'
-import { TableData } from './TableManager'
-import { ColumnDef } from '../components'
+import { TablePlugin, TableData, ColumnDef } from '../core'
 import { check } from '../utils'
 
 const DEV = process.env.NODE_ENV === 'development'
 
-export interface TablePagination {
+export interface Pagination {
   /**
    * A function that returns the number of items / rows in each page.
    */
@@ -18,9 +16,9 @@ export interface TablePagination {
   currPage: number
 }
 
-export class TablePaginationPlugin implements TablePlugin {
+export class PaginationPlugin implements TablePlugin {
   constructor(
-    private state: () => TablePagination
+    private state: () => Pagination
   ) {}
 
   get priority() { return 100 }

@@ -1,4 +1,3 @@
-import * as _ from 'lodash'
 import * as React from 'react'
 
 import {
@@ -10,19 +9,13 @@ import {
   TableBody,
 } from 'material-ui'
 
-import {
-  ColumnData,
-  DataTableState,
-} from '../components'
-
-import {
-  SortOrder
-} from '../plugins'
+import { ColumnData, DataTableState } from '../core'
+import { SortOrder } from '../sorting'
 
 const sortingImage = new Map([
-  [SortOrder.NONE, require('../images/sorting-both.png')],
-  [SortOrder.DESC, require('../images/sorting-desc.png')],
-  [SortOrder.ASC,  require('../images/sorting-asc.png')],
+  [SortOrder.NONE, require('./images/sorting-both.png')],
+  [SortOrder.DESC, require('./images/sorting-desc.png')],
+  [SortOrder.ASC,  require('./images/sorting-asc.png')],
 ])
 
 export module MuiTable {

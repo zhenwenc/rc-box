@@ -1,6 +1,6 @@
 import { Iterable, List, Seq } from 'immutable'
 
-import { ColumnDef } from '../components'
+import { ColumnDef } from './TableColumn'
 import { TablePlugin } from './TablePlugin'
 
 export type RawTableData = Seq<number, any> | any[]

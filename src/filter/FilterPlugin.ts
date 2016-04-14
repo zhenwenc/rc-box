@@ -15,21 +15,15 @@
  * data will be filtered with the updated search term which is returned
  * by the getTerm function.
  *
- * @providesModule TableFilterPlugin
+ * @providesModule FilterPlugin
  */
 
 import * as _ from 'lodash'
-import { Iterable, List } from 'immutable'
-import { TablePlugin } from './TablePlugin'
-import { TableData } from './TableManager'
-import { ColumnDef } from '../components'
+import { List } from 'immutable'
 import { check } from '../utils'
+import { TablePlugin, TableData, ColumnDef } from '../core'
 
-export interface TableFilterSelector {
-  (rowData: any): Iterable<number, any>
-}
-
-export interface TableFilterPredicate {
+export interface FilterPredicate {
   (x: any, term: any): boolean
 }
 
@@ -49,7 +43,7 @@ const defaultPredicate = (x: any, term: any) => {
   return _.eq(x, term)
 }
 
-export class TableFilterPlugin implements TablePlugin {
+export class FilterPlugin implements TablePlugin {
   /**
    * The function that returns the filter term. Commonly the filter
    * term will be stored in the parent component's state.
@@ -62,11 +56,11 @@ export class TableFilterPlugin implements TablePlugin {
    * can specify the custom filter function, otherwise the default
    * comparator will be used.
    */
-  private predicate: TableFilterPredicate
+  private predicate: FilterPredicate
 
   constructor(options: {
     term: () => any
-    predicate?: TableFilterPredicate
+    predicate?: FilterPredicate
   }) {
     check(!_.isUndefined(options.term),
       `Expected term function for filter plugin!`)

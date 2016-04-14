@@ -8,7 +8,7 @@
  * There are 2 ways to set up sorting table sorting handlers:
  *
  * 1. Sort by column, which you need to specify `sortable` property
- *    in the DataTable Column component, see #TableColumnSorter for
+ *    in the DataTable Column component, see #ColumnSorter for
  *    available configurations. This is the typical usage for this
  *    plugin.
  *
@@ -36,15 +36,13 @@
 
 import * as _ from 'lodash'
 import { List, Iterable } from 'immutable'
-import { TablePlugin } from './TablePlugin'
-import { TableData } from './TableManager'
-import { ColumnDef } from '../components/TableColumn'
+import { TablePlugin, TableData, ColumnDef } from '../core'
 
 export enum SortOrder { NONE, ASC, DESC }
 
 export type TableSortOrder = () => SortOrder
 
-export interface TableColumnSorter {
+export interface ColumnSorter {
   /**
    * A function that returns the order the column should be sorted.
    * The default value is SortOrder#NONE.
@@ -67,14 +65,14 @@ export interface TableColumnSorter {
 export interface TableSorter {
   /**
    * A function that returns the order the column should be sorted.
-   * The same logic is applied as TableColumnSorter#order.
+   * The same logic is applied as ColumnSorter#order.
    */
   order: TableSortOrder
   /**
    * A function that retruns the value from each table row data to be
    * used in the sorting / comparator function.
    *
-   * Unlike the TableColumnSorter where we can use the selector function
+   * Unlike the ColumnSorter where we can use the selector function
    * defined in each Column component, the custom sorter let you choose
    * what data you needed to perform sorting.
    */

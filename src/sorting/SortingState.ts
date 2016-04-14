@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import { Map } from 'immutable'
-import { SortOrder } from '../plugins'
 import { check } from '../utils'
+import { SortOrder } from './SortingPlugin'
 
 const DEV = process.env.NODE_ENV === 'development'
 

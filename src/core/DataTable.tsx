@@ -4,19 +4,10 @@ import * as React from 'react'
 import { Component } from 'react'
 import { Seq, List } from 'immutable'
 
-import {
-  ColumnDef,
-  ColumnData,
-  mapColumnDef
-} from './TableColumn'
-import {
-  TableManager,
-  TablePlugin,
-  RawTableData,
-} from '../plugins'
-import {
-  MuiTable,
-} from '../renderers'
+import { ColumnDef, ColumnData, mapColumnDef } from './TableColumn'
+import { TableManager, RawTableData } from './TableManager'
+import { TablePlugin } from './TablePlugin'
+import { MuiTable } from '../renderers'
 
 const {
   renderTableHeader,
