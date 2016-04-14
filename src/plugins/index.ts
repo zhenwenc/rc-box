@@ -1,4 +1,5 @@
 export * from './TableFilterPlugin'
 export * from './TableManager'
+export * from './TablePaginationPlugin'
 export * from './TablePlugin'
 export * from './TableSortPlugin'
