@@ -20,8 +20,8 @@
 
 import * as _ from 'lodash'
 import { List } from 'immutable'
-import { check } from '../utils'
 import { TablePlugin, TableData, ColumnDef } from '../core'
+import { FilterState } from './FilterState'
 
 export interface FilterPredicate {
   (x: any, term: any): boolean
@@ -58,17 +58,23 @@ export class FilterPlugin implements TablePlugin {
    */
   private predicate: FilterPredicate
 
+  /**
+   * Table filter state helper.
+   */
+  private filterState: FilterState
+
   constructor(options: {
-    term: () => any
+    initTerm?: string
     predicate?: FilterPredicate
-  }) {
-    check(!_.isUndefined(options.term),
-      `Expected term function for filter plugin!`)
-    this.term = options.term
+  } = {}) {
+    this.filterState = new FilterState(this, options.initTerm)
+    this.term = this.filterState.fnTerm
     this.predicate = options.predicate || defaultPredicate
   }
 
   get priority() { return 300 }
+
+  get state() { return this.filterState }
 
   /**
    * Function that intented to be used by the table plugin manager to
