@@ -8,11 +8,14 @@ import {
 import {
   DataTable,
   Column,
+  TablePlugin,
   TableToolbar,
   TableFooter,
   TableFilterPlugin,
+  TablePaginationPlugin,
   TableSortPlugin,
   SortingState,
+  PaginationState,
 } from '../src/index'
 
 const tableRows = [
@@ -37,16 +40,11 @@ const tableRows = [
 export interface SampleTableState {
   filterTerm?: string
   sortColumn?: SortingState
+  pagination?: PaginationState
+  plugins?: TablePlugin[]
 }
 
 export class SampleTable extends Component<{}, SampleTableState> {
-
-  plugins = [
-    new TableFilterPlugin({
-      term: () => this.state.filterTerm,
-    }),
-    new TableSortPlugin()
-  ]
 
   handleSearchChange(event: React.FormEvent, term: string) {
     this.setState({
@@ -63,20 +61,35 @@ export class SampleTable extends Component<{}, SampleTableState> {
   }
 
   componentWillMount() {
+    const sortingState = new SortingState(['id', 'name'])
+    const paginationState = new PaginationState({
+      fnTableSize: () => tableRows.length
+    })
+
+    const plugins = [
+      new TableFilterPlugin({
+        term: () => this.state.filterTerm,
+      }),
+      new TablePaginationPlugin(() => this.state.pagination),
+      new TableSortPlugin(),
+    ]
+
     this.setState({
       filterTerm: '',
-      sortColumn: new SortingState(['id', 'name'])
+      sortColumn: sortingState,
+      pagination: paginationState,
+      plugins: plugins,
     })
   }
 
   render() {
-    const { sortColumn } = this.state
+    const { sortColumn, plugins } = this.state
 
     return (
       <div>
         <TableToolbar onSearchChange={this.handleSearchChange.bind(this)} />
         <Divider />
-        <DataTable data={tableRows} plugins={this.plugins}>
+        <DataTable data={tableRows} plugins={plugins}>
           <Column
             header="ID"
             field={row => row.id}
