@@ -13,7 +13,6 @@ import {
   FilterPlugin,
   PaginationPlugin,
   SortingPlugin,
-  PaginationState,
 } from '../src/index'
 
 const tableRows = [
@@ -36,7 +35,7 @@ const tableRows = [
 ]
 
 export interface SampleTableState {
-  pagination?: PaginationState
+  pagination?: PaginationPlugin
   filter?: FilterPlugin
   sorting?: SortingPlugin
   [key: string]: any
@@ -57,19 +56,15 @@ export class SampleTable extends Component<{}, SampleTableState> {
   }
 
   componentWillMount() {
-    const paginationState = new PaginationState({
-      fnTableSize: () => tableRows.length
-    })
-
     this.setState({
-      pagination: paginationState,
+      pagination: new PaginationPlugin(),
       filter: new FilterPlugin(),
       sorting: new SortingPlugin({ keys: ['id', 'name'] }),
     })
   }
 
   render() {
-    const { filter, sorting } = this.state
+    const { filter, sorting, pagination } = this.state
 
     return (
       <div>
@@ -77,7 +72,7 @@ export class SampleTable extends Component<{}, SampleTableState> {
         <Divider />
         <DataTable
           data={tableRows}
-          plugins={[filter, sorting]}
+          plugins={[filter, sorting, pagination]}
           onStateUpdate={this.handleDataTableUpdate.bind(this)}
         >
           <Column
