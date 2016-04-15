@@ -1,5 +1,6 @@
 import { Iterable, List, Seq } from 'immutable'
 
+import { DataTable } from './DataTable'
 import { ColumnDef } from './TableColumn'
 import { TablePlugin } from './TablePlugin'
 
@@ -10,11 +11,19 @@ export class TableManager {
   private plugins: List<TablePlugin>
   private columns: List<ColumnDef>
 
-  constructor(plugins: List<TablePlugin>, columns: List<ColumnDef>) {
+  constructor(
+    dataTable: DataTable,
+    plugins: List<TablePlugin>,
+    columns: List<ColumnDef>
+  ) {
     // Sort plugins by priority DESC
     this.plugins = plugins.sort(
       (a, b) => b.priority - a.priority
     ).toList()
+    // Register root element to each plugin
+    this.plugins.forEach(p => {
+      if (!!p.register) p.register(dataTable)
+    })
     this.columns = columns
   }
 

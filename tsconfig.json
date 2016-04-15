@@ -30,6 +30,7 @@
         "src/core/TableColumn.tsx",
         "src/core/TableManager.ts",
         "src/core/TablePlugin.ts",
+        "src/core/TablePluginBase.ts",
         "src/filter/FilterPlugin.ts",
         "src/filter/FilterState.ts",
         "src/filter/index.ts",

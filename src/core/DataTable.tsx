@@ -106,7 +106,7 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
   constructor(props: DataTableProps) {
     super()
     this.columns = List(React.Children.map(props.children, mapColumnDef))
-    this.manager = new TableManager(List(props.plugins), this.columns)
+    this.manager = new TableManager(this, List(props.plugins), this.columns)
   }
 
   get header() {
