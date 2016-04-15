@@ -4,21 +4,25 @@ import { TablePluginBase, TableData, ColumnDef } from '../core'
 
 export abstract class PaginationPluginImpl extends TablePluginBase {
 
-  protected abstract getPageSize(): number
-  protected abstract getCurrentPage(): number
+  protected abstract get pageSize(): number
+  protected abstract get pageIndex(): number
   protected abstract setMaxIndex(maxIndex: number): void
+
+  protected calMaxIndex(dataSize: number, pageSize: number) {
+    return Math.ceil(dataSize / pageSize)
+  }
 
   get priority() { return 100 }
 
   process(tableData: TableData, columns: List<ColumnDef>) {
-    const pageSize = this.getPageSize()
-    const maxIndex = Math.ceil(tableData.size / pageSize)
-    const currPage = Math.min(this.getCurrentPage(), maxIndex)
+    const pageSize = this.pageSize
+    const maxIndex = this.calMaxIndex(tableData.size, pageSize)
+    const currPage = Math.min(this.pageIndex, maxIndex)
     const offset   = pageSize * (currPage - 1)
 
-    const result = tableData.slice(offset, offset + pageSize)
-    this.setMaxIndex(result.size)
+    // Update pagination states base on the current table data
+    this.setMaxIndex(maxIndex)
 
-    return result
+    return tableData.slice(offset, offset + pageSize)
   }
 }
