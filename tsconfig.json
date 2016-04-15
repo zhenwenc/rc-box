@@ -32,7 +32,7 @@
         "src/core/TablePlugin.ts",
         "src/core/TablePluginBase.ts",
         "src/filter/FilterPlugin.ts",
-        "src/filter/FilterState.ts",
+        "src/filter/FilterPluginImpl.ts",
         "src/filter/index.ts",
         "src/index.ts",
         "src/pagination/index.ts",
