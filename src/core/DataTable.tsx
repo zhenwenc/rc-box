@@ -6,7 +6,7 @@ import { Seq, List } from 'immutable'
 
 import { ColumnDef, ColumnData, mapColumnDef } from './TableColumn'
 import { TableManager, RawTableData } from './TableManager'
-import { TablePlugin } from './TablePlugin'
+import { TablePlugin, StateUpdateCallback } from './TablePlugin'
 import { MuiTable } from '../renderers'
 
 const {
@@ -74,6 +74,16 @@ export interface DataTableProps {
   }
 
   /**
+   * Callback function that fired when the plugin managed state
+   * has changed. You should trigger component update in this
+   * function.
+   *
+   * NOTE: This property is required if you have stateful plugin,
+   *       otherwise you can set this to undefined.
+   */
+  onStateUpdate?: StateUpdateCallback
+
+  /**
    * Plugins for manipulating the table data.
    */
   plugins?: TablePlugin[]
@@ -105,8 +115,9 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
 
   constructor(props: DataTableProps) {
     super()
-    this.columns = List(React.Children.map(props.children, mapColumnDef))
-    this.manager = new TableManager(this, List(props.plugins), this.columns)
+    const { children, plugins, onStateUpdate } = props
+    this.columns = List(React.Children.map(children, mapColumnDef))
+    this.manager = new TableManager(onStateUpdate, List(plugins), this.columns)
   }
 
   get header() {

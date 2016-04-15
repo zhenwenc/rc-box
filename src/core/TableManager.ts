@@ -1,8 +1,7 @@
 import { Iterable, List, Seq } from 'immutable'
 
-import { DataTable } from './DataTable'
 import { ColumnDef } from './TableColumn'
-import { TablePlugin } from './TablePlugin'
+import { TablePlugin, StateUpdateCallback } from './TablePlugin'
 
 export type RawTableData = Seq<number, any> | any[]
 export type TableData = Iterable<number, any>
@@ -12,7 +11,7 @@ export class TableManager {
   private columns: List<ColumnDef>
 
   constructor(
-    dataTable: DataTable,
+    updateCallback: StateUpdateCallback,
     plugins: List<TablePlugin>,
     columns: List<ColumnDef>
   ) {
@@ -22,7 +21,7 @@ export class TableManager {
     ).toList()
     // Register root element to each plugin
     this.plugins.forEach(p => {
-      if (!!p.register) p.register(dataTable)
+      if (!!p.register) p.register(updateCallback)
     })
     this.columns = columns
   }
