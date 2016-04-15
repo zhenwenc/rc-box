@@ -49,11 +49,7 @@ export class SampleTable extends Component<{}, SampleTableState> {
   }
 
   handleSortChange(key: string) {
-    return (event: React.TouchEvent) => {
-      this.setState(({ sorting }) => ({
-        sorting: sorting.state.next(key),
-      }))
-    }
+    this.state.sorting.next(key)
   }
 
   handleDataTableUpdate() {
@@ -81,21 +77,21 @@ export class SampleTable extends Component<{}, SampleTableState> {
         <Divider />
         <DataTable
           data={tableRows}
-          plugins={[sorting, filter]}
+          plugins={[filter, sorting]}
           onStateUpdate={this.handleDataTableUpdate.bind(this)}
         >
           <Column
             header="ID"
             field={row => row.id}
             type="number"
-            sortable={{order: sorting.state.fnGet('id')}}
-            onHeaderTouch={this.handleSortChange('id')}
+            sortable={{order: sorting.fnGet('id')}}
+            onHeaderTouch={() => this.handleSortChange('id')}
           />
           <Column
             header="Name"
             field={row => row.name}
-            sortable={{order: sorting.state.fnGet('name')}}
-            onHeaderTouch={this.handleSortChange('name')}
+            sortable={{order: sorting.fnGet('name')}}
+            onHeaderTouch={() => this.handleSortChange('name')}
           />
           <Column
             header="Status"
