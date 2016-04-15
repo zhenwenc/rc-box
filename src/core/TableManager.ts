@@ -21,7 +21,9 @@ export class TableManager {
     ).toList()
     // Register root element to each plugin
     this.plugins.forEach(p => {
-      if (!!p.register) p.register(updateCallback)
+      if (!!p.register) {
+        p.register(updateCallback)
+      }
     })
     this.columns = columns
   }
