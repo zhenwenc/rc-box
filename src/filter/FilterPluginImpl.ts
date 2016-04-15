@@ -72,7 +72,6 @@ export abstract class FilterPluginImpl extends TablePluginBase {
     const term = this.term
     const selector = rowData => columns.map(s => s.field(rowData))
 
-    console.info('======> ', term)
     if (_.isUndefined(term) || _.isEmpty(term)) {
       return tableData // no filter
     }
