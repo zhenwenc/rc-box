@@ -8,13 +8,11 @@ import {
 import {
   DataTable,
   Column,
-  TablePlugin,
   TableToolbar,
   TableFooter,
   FilterPlugin,
   PaginationPlugin,
-  TableSortPlugin,
-  SortingState,
+  SortingPlugin,
   PaginationState,
 } from '../src/index'
 
@@ -38,69 +36,65 @@ const tableRows = [
 ]
 
 export interface SampleTableState {
-  filterTerm?: string
-  sortColumn?: SortingState
   pagination?: PaginationState
-  plugins?: TablePlugin[]
+  filter?: FilterPlugin
+  sorting?: SortingPlugin
+  [key: string]: any
 }
 
 export class SampleTable extends Component<{}, SampleTableState> {
 
   handleSearchChange(event: React.FormEvent, term: string) {
-    this.setState({
-      filterTerm: term,
-    })
+    this.state.filter.setTerm(term)
   }
 
   handleSortChange(key: string) {
     return (event: React.TouchEvent) => {
-      this.setState(({ sortColumn }) => ({
-        sortColumn: sortColumn.next(key),
+      this.setState(({ sorting }) => ({
+        sorting: sorting.state.next(key),
       }))
     }
   }
 
+  handleDataTableUpdate() {
+    this.forceUpdate()
+  }
+
   componentWillMount() {
-    const sortingState = new SortingState(['id', 'name'])
     const paginationState = new PaginationState({
       fnTableSize: () => tableRows.length
     })
 
-    const plugins = [
-      new FilterPlugin({
-        term: () => this.state.filterTerm,
-      }),
-      new PaginationPlugin(() => this.state.pagination),
-      new TableSortPlugin(),
-    ]
-
     this.setState({
-      filterTerm: '',
-      sortColumn: sortingState,
       pagination: paginationState,
-      plugins: plugins,
+      filter: new FilterPlugin(),
+      sorting: new SortingPlugin({ keys: ['id', 'name'] }),
     })
   }
 
   render() {
-    const { sortColumn, plugins } = this.state
+    const { filter, sorting } = this.state
 
     return (
       <div>
         <TableToolbar onSearchChange={this.handleSearchChange.bind(this)} />
         <Divider />
-        <DataTable data={tableRows} plugins={plugins}>
+        <DataTable
+          data={tableRows}
+          plugins={[sorting, filter]}
+          onStateUpdate={this.handleDataTableUpdate.bind(this)}
+        >
           <Column
             header="ID"
             field={row => row.id}
             type="number"
-            sortable={{order: sortColumn.getFn('id')}}
+            sortable={{order: sorting.state.fnGet('id')}}
             onHeaderTouch={this.handleSortChange('id')}
           />
           <Column
             header="Name"
             field={row => row.name}
-            sortable={{order: sortColumn.getFn('name')}}
+            sortable={{order: sorting.state.fnGet('name')}}
             onHeaderTouch={this.handleSortChange('name')}
           />
           <Column
