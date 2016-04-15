@@ -1,2 +1,2 @@
 export * from './PaginationPlugin'
-export * from './PaginationState'
+export * from './PaginationPluginImpl'

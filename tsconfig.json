@@ -37,7 +37,7 @@
         "src/index.ts",
         "src/pagination/index.ts",
         "src/pagination/PaginationPlugin.ts",
-        "src/pagination/PaginationState.ts",
+        "src/pagination/PaginationPluginImpl.ts",
         "src/renderers/index.ts",
         "src/renderers/MuiFooterRenderer.tsx",
         "src/renderers/MuiTableRenderer.tsx",
