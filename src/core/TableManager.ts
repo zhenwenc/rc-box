@@ -14,9 +14,10 @@ export class TableManager {
   private columns: List<ColumnDef>
 
   constructor(
-    dataTable: DataTable,
     plugins: List<TablePlugin>,
-    columns: List<ColumnDef>
+    columns: List<ColumnDef>,
+    dataTable: DataTable,
+    initData: TableData
   ) {
     this.dataTable = dataTable
     this.columns = columns
@@ -25,10 +26,11 @@ export class TableManager {
     this.plugins = plugins.sort(
       (a, b) => b.priority - a.priority
     ).toList()
+
     // Register root element to each plugin
     this.plugins
       .filter(p => !!p.register)
-      .forEach(p => p.register(this))
+      .forEach(p => p.register(this, initData))
   }
 
   hasPlugin(plugin: TablePlugin) {

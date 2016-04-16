@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as React from 'react'
 
 import { Component } from 'react'
-import { Seq, List } from 'immutable'
+import { Seq, List, Iterable } from 'immutable'
 
 import { check } from '../utils'
 import { ColumnDef, ColumnData, mapColumnDef } from './TableColumn'
@@ -99,9 +99,9 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
 
   constructor(props: DataTableProps) {
     super()
-    const { children, plugins } = props
+    const { children, plugins, data } = props
     this.columns = List(React.Children.map(children, mapColumnDef))
-    this.manager = new TableManager(this, List(plugins), this.columns)
+    this.manager = new TableManager(List(plugins), this.columns, this, Seq(data))
   }
 
   get header() {

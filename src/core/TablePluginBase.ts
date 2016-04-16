@@ -9,7 +9,7 @@ export abstract class TablePluginBase implements TablePlugin {
   // Will be defined in register method
   private manager: TableManager
 
-  register(manager: TableManager) {
+  register(manager: TableManager, initData?: TableData) {
     check(!this.manager, `Unexpected method call: ` +
       `'register' method should only be called by TableManager! ` +
       `Please check implementation of ${this.constructor.name}.`)
