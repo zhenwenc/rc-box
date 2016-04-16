@@ -1,4 +1,5 @@
 import * as _ from 'lodash'
+import { List } from 'immutable'
 import { check } from '../utils'
 import { PaginationPluginImpl } from './PaginationPluginImpl'
 
@@ -33,6 +34,7 @@ export class PaginationPlugin extends PaginationPluginImpl {
     check(size > 0 && Number.isInteger(size),
       `Page size must be positive integer, but got [${size}]`)
     this._pageSize = size
+    this.notifyUpdate(forceUpdate)
     return this
   }
 
@@ -44,6 +46,7 @@ export class PaginationPlugin extends PaginationPluginImpl {
     check(index > 0 && Number.isInteger(index),
       `Page number must greater than 0, but got ${index}`)
     this._currPage = index
+    this.notifyUpdate(forceUpdate)
     return this
   }
 
@@ -52,8 +55,6 @@ export class PaginationPlugin extends PaginationPluginImpl {
   }
 
   protected setMaxIndex(maxIndex: number) {
-    console.log('set max index');
-
     this._maxPage = maxIndex
   }
 
@@ -88,9 +89,7 @@ export class PaginationPlugin extends PaginationPluginImpl {
    *
    * [first][prev][1, 2, 3, ...][next][last]
    */
-  createPageNavigations(includePrevNext = true, includeFirstLast = false) {
-    console.log('createPageNavigations');
-
+  createNavigations(includePrevNext = true, includeFirstLast = false) {
     let pages = _.range(1, this.maxIndex + 1)
       .map(index => ({
         key: _.toString(index),
@@ -109,7 +108,7 @@ export class PaginationPlugin extends PaginationPluginImpl {
       pages = _.flatten([[first], pages, [last]])
     }
 
-    return pages
+    return List(pages)
   }
 
   createPrevNextNavigation() {

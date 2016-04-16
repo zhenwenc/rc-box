@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { Component } from 'react'
+import { Iterable } from 'immutable'
+
 import {
   GridList,
   RaisedButton,
@@ -7,16 +9,16 @@ import {
   MenuItem,
 } from 'material-ui'
 
-export interface TableFooterProps {
-  pages: {
+
+export interface FooterProps {
+  pages: Iterable<number, {
     key: any,
     active: boolean,
     handleTouch: React.TouchEventHandler
-  }[]
+  }>
 }
 
-export class TableFooter extends Component<TableFooterProps, any> {
-
+export class Footer extends Component<FooterProps, any> {
   get styles() {
     return {
       base: {
@@ -46,7 +48,6 @@ export class TableFooter extends Component<TableFooterProps, any> {
       }
     }
   }
-
   render() {
     return (
       <GridList cols={2} cellHeight={40} style={this.styles.base}>
@@ -71,5 +72,4 @@ export class TableFooter extends Component<TableFooterProps, any> {
       </GridList>
     )
   }
-
 }

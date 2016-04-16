@@ -9,11 +9,17 @@ export abstract class TablePluginBase implements TablePlugin {
   // Will be defined in register method
   private manager: TableManager
 
-  register(tableManager: TableManager) {
+  register(manager: TableManager) {
     check(!this.manager, `Unexpected method call: ` +
       `'register' method should only be called by TableManager! ` +
       `Please check implementation of ${this.constructor.name}.`)
-    this.manager = tableManager
+    this.manager = manager
+  }
+
+  notifyUpdate(forceUpdate = true) {
+    if (forceUpdate) {
+      this.manager.forceUpdateTable(this)
+    }
   }
 
   abstract get priority(): number

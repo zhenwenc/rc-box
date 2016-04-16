@@ -34,6 +34,7 @@ export class FilterPlugin extends FilterPluginImpl {
 
   setTerm(term: string, forceUpdate = true) {
     this.filterTerm = _.trim(term)
+    this.notifyUpdate(forceUpdate)
     return this
   }
 }
