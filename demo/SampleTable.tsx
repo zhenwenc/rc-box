@@ -46,21 +46,20 @@ export interface SampleTableState {
 export class SampleTable extends Component<{}, SampleTableState> {
 
   handleSearchChange = (event: React.FormEvent, term: string) => {
-    // this.setState(({ filter }) => ({
-    //   filter: filter.setTerm(term)
-    // }))
     this.state.filter.setTerm(term)
   }
 
-  handlePageChange(pageIndex: number) {
-    return () => this.state.pagination.setPageIndex(pageIndex)
+  handlePageSizeChange = (_, index?, value?) => {
+    this.state.pagination.setPageSize(value)
   }
 
   componentWillMount() {
     this.setState({
-      pagination: new PaginationPlugin({ initDataSize: tableRows.length }),
+      pagination: new PaginationPlugin(),
       filter: new FilterPlugin(),
-      sorting: new SortingPlugin({ keys: ['id', 'name'] }),
+      sorting: new SortingPlugin({
+        keys: ['id', 'name'],
+      }),
     })
   }
 
@@ -72,14 +71,20 @@ export class SampleTable extends Component<{}, SampleTableState> {
 
     return (
       <div>
-        <MuiTable.Toolbar onSearchChange={this.handleSearchChange} />
+        <MuiTable.Toolbar
+          onSearchChange={this.handleSearchChange}
+        />
         <Divider />
         {MuiTable.renderTable(
           MuiTable.renderTableHeader(headerData),
           rowsData.map(MuiTable.renderTableRow)
         )}
         <Divider />
-        <MuiTable.Footer pages={pagination.createNavigations()} />
+        <MuiTable.Footer
+          pageList={pagination.createPageList()}
+          pageSizeList={pagination.createPageSizeList()}
+          onPageSizeChange={this.handlePageSizeChange}
+        />
       </div>
     )
   }
