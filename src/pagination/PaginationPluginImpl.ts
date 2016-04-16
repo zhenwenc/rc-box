@@ -14,6 +14,11 @@ export abstract class PaginationPluginImpl extends TablePluginBase {
 
   get priority() { return 100 }
 
+  register(_, initData: TableData) {
+    super.register(_, initData)
+    this.setMaxIndex(this.calMaxIndex(initData.size, this.pageSize))
+  }
+
   process(tableData: TableData, columns: List<ColumnDef>) {
     const pageSize = this.pageSize
     const maxIndex = this.calMaxIndex(tableData.size, pageSize)

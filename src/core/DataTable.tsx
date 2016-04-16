@@ -2,18 +2,12 @@ import * as _ from 'lodash'
 import * as React from 'react'
 
 import { Component } from 'react'
-import { Seq, List } from 'immutable'
+import { Seq, List, Iterable } from 'immutable'
 
+import { check } from '../utils'
 import { ColumnDef, ColumnData, mapColumnDef } from './TableColumn'
 import { TableManager, RawTableData, TableData } from './TableManager'
 import { TablePlugin } from './TablePlugin'
-import { MuiTable } from '../renderers'
-
-const {
-  renderTableHeader,
-  renderTableRow,
-  renderTable,
-} = MuiTable
 
 export interface DataTableProps {
 
@@ -31,27 +25,15 @@ export interface DataTableProps {
   children?: any
 
   /**
-   * Renderer function for the table header columns.
-   */
-  headerRenderer?: {
-    (data: ColumnData[]): JSX.Element
-  }
-
-  /**
    * Renderer function for the final elements.
    */
-  renderer?: {
+  renderer: {
     (
-      headerColumn: JSX.Element,
-      rowColumns: JSX.Element[]
+      header: List<ColumnData>,
+      rows: List<List<ColumnData>>,
+      props?: Object,
+      states?: DataTableState
     ): JSX.Element
-  }
-
-  /**
-   * Renderer function for each row.
-   */
-  rowRenderer?: {
-    (data: ColumnData[], rowIndex: number): JSX.Element
   }
 
   /**
@@ -63,7 +45,7 @@ export interface DataTableProps {
    *       of the components, here is the place where you can
    *       pass necessary properties to rendering the table.
    */
-  rendererProps?: any
+  rendererProps?: Object
 
   /**
    * Callback function that fired when failed on processing
@@ -94,11 +76,6 @@ export interface DataTableProps {
    * Plugins for manipulating the table data.
    */
   plugins?: TablePlugin[]
-
-  /**
-   * Component that rendered when processing the table data.
-   */
-  progressIndicator?: JSX.Element
 }
 
 export interface DataTableState {
@@ -122,29 +99,29 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
 
   constructor(props: DataTableProps) {
     super()
-    const { children, plugins } = props
+    const { children, plugins, data } = props
     this.columns = List(React.Children.map(children, mapColumnDef))
-    this.manager = new TableManager(List(plugins), this.columns)
+    this.manager = new TableManager(List(plugins), this.columns, this, Seq(data))
   }
 
   get header() {
-    const { headerRenderer } = this.props
-    const renderer = headerRenderer || renderTableHeader
-    const headerDataList = this.columns.map(columnDef => ({
-      cellData: columnDef.header, columnDef,
-    }))
-    return renderer(headerDataList.toArray())
+    return this.columns.map(columnDef => ({
+      cellData: columnDef.header,
+      columnDef,
+    })).toList()
   }
 
   get rows() {
-    const { rowRenderer } = this.props
-    const renderer = rowRenderer || renderTableRow
-    return this.state.tableData.map((rowData, rowIndex) => {
-      const columnDataList = this.columns.map(columnDef => ({
-        cellData: columnDef.field(rowData), columnDef,
-      }))
-      return renderer(columnDataList.toArray(), rowIndex)
-    })
+    return this.state.tableData.map((rowData, rowIndex) => (
+      this.columns.map(columnDef => ({
+        cellData: columnDef.field(rowData),
+        columnDef,
+      })).toList()
+    )).toList()
+  }
+
+  get rawData() {
+    return this.props.data
   }
 
   updateTableData(srcData: RawTableData) {
@@ -187,11 +164,14 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
   }
 
   render() {
-    const renderer      = this.props.renderer || renderTable
-    const rendererProps = this.props
+    const renderer      = this.props.renderer
+    const rendererProps = this.props.rendererProps
     const tableHeader   = this.header
-    const tableRows     = this.rows.toArray()
+    const tableRows     = this.rows
     const tableStates   = _.clone(this.state)
+
+    check(renderer, `Must specify renderer function for DataTable. ` +
+      `Please see DataTable#renderer property for more details.`)
 
     return renderer(tableHeader, tableRows, rendererProps, tableStates)
   }

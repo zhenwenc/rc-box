@@ -1,10 +1,10 @@
-import { List } from 'immutable'
+import { List, Iterable } from 'immutable'
 import { ColumnDef } from './TableColumn'
 import { TableData, TableManager } from './TableManager'
 
 export interface TablePlugin {
   register?: {
-    (manager: TableManager): void
+    (manager: TableManager, initData?: TableData): void
   }
   priority: number,
   process: {

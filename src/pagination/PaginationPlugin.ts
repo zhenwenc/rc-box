@@ -1,9 +1,16 @@
 import * as _ from 'lodash'
+import { List } from 'immutable'
 import { check } from '../utils'
 import { PaginationPluginImpl } from './PaginationPluginImpl'
 
 export const PAGE_MIN_INDEX = 1
-export const PAGE_DEFAULT_SIZE = 5
+export const PAGE_DEFAULT_SIZE = 10
+export const PAGE_DEFAULT_SIZE_LIST = [
+  [10, '10 Rows'],
+  [25, '25 Rows'],
+  [30, '30 Rows'],
+  [50, '50 Rows'],
+]
 
 export class PaginationPlugin extends PaginationPluginImpl {
   private _pageSize: number
@@ -11,18 +18,15 @@ export class PaginationPlugin extends PaginationPluginImpl {
   private _maxPage: number
 
   constructor({
-    initDataSize,
     initPage,
     pageSize,
   } : {
-    initDataSize: number,
     pageSize?: number
     initPage?: number
-  }) {
+  } = {}) {
     super()
     this.setPageSize(pageSize || PAGE_DEFAULT_SIZE, false)
     this.setPageIndex(initPage || PAGE_MIN_INDEX, false)
-    this.setMaxIndex(this.calMaxIndex(initDataSize, this._pageSize))
   }
 
   get pageSize() {
@@ -33,6 +37,7 @@ export class PaginationPlugin extends PaginationPluginImpl {
     check(size > 0 && Number.isInteger(size),
       `Page size must be positive integer, but got [${size}]`)
     this._pageSize = size
+    this.notifyUpdate(forceUpdate)
     return this
   }
 
@@ -44,6 +49,7 @@ export class PaginationPlugin extends PaginationPluginImpl {
     check(index > 0 && Number.isInteger(index),
       `Page number must greater than 0, but got ${index}`)
     this._currPage = index
+    this.notifyUpdate(forceUpdate)
     return this
   }
 
@@ -52,8 +58,6 @@ export class PaginationPlugin extends PaginationPluginImpl {
   }
 
   protected setMaxIndex(maxIndex: number) {
-    console.log('set max index');
-
     this._maxPage = maxIndex
   }
 
@@ -84,58 +88,74 @@ export class PaginationPlugin extends PaginationPluginImpl {
   }
 
   /**
+   * Generate a list of page size options for the given options.
+   */
+  createPageSizeList(pageSizeList?: [number, string][]) {
+    const sizeList = List<[number, string]>(
+      pageSizeList || PAGE_DEFAULT_SIZE_LIST)
+
+    return sizeList.map(pair => {
+      const [pageSize, label] = pair
+      return {
+        value: pageSize,
+        label: label,
+        active: _.eq(pageSize, this.pageSize),
+        onChange: () => this.setPageSize(pageSize),
+      }
+    })
+  }
+
+  /**
    * Generate a list of page navigation controls with format:
    *
    * [first][prev][1, 2, 3, ...][next][last]
    */
-  createPageNavigations(includePrevNext = true, includeFirstLast = false) {
-    console.log('createPageNavigations');
-
+  createPageList(includePrevNext = true, includeFirstLast = false) {
     let pages = _.range(1, this.maxIndex + 1)
       .map(index => ({
         key: _.toString(index),
         active: _.eq(index, this.pageIndex),
-        handleTouch: () => this.setPageIndex(index),
+        handler: () => this.setPageIndex(index),
       })
     )
 
     if (includePrevNext) {
-      const [prev, next] = this.createPrevNextNavigation()
+      const [prev, next] = this.createPagePrevNext()
       pages = _.flatten([[prev], pages, [next]])
     }
 
     if (includeFirstLast) {
-      const [first, last] = this.createFirstLastNavigation()
+      const [first, last] = this.createPageFirstLast()
       pages = _.flatten([[first], pages, [last]])
     }
 
-    return pages
+    return List(pages)
   }
 
-  createPrevNextNavigation() {
+  createPagePrevNext() {
     return [
       {
         key: 'PREV',
         active: _.eq(PAGE_MIN_INDEX, this.pageIndex),
-        handleTouch: () => this.toPrevPage,
+        handler: () => this.toPrevPage,
       }, {
         key: 'NEXT',
         active: _.eq(this.maxIndex, this.pageIndex),
-        handleTouch: () => this.toNextPage,
+        handler: () => this.toNextPage,
       },
     ]
   }
 
-  createFirstLastNavigation() {
+  createPageFirstLast() {
     return [
       {
         key: 'FIRST',
         active: _.eq(PAGE_MIN_INDEX, this.pageIndex),
-        handleTouch: () => this.toFirstPage,
+        handler: () => this.toFirstPage,
       }, {
         key: 'LAST',
         active: _.eq(this.maxIndex, this.pageIndex),
-        handleTouch: () => this.toLastPage,
+        handler: () => this.toLastPage,
       },
     ]
   }

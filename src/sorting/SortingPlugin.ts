@@ -55,6 +55,7 @@ export class SortingPlugin extends SortingPluginImpl {
     this.checkKey(key)
     this.checkOrder(order)
     this.states = this.states.set(key, order)
+    this.notifyUpdate(forceUpdate)
     return this
   }
 
@@ -65,7 +66,7 @@ export class SortingPlugin extends SortingPluginImpl {
       : current === ASC
         ? DESC
         : ASC
-    this.resetAll()
+    this.resetAll(false)
     return this.set(key, next, forceUpdate)
   }
 
@@ -73,10 +74,11 @@ export class SortingPlugin extends SortingPluginImpl {
     return this.set(key, NONE, forceUpdate)
   }
 
-  resetAll() {
+  resetAll(forceUpdate = true) {
     this.states.keySeq().forEach(
-      this.reset.bind(this)
+      key => this.reset.bind(this)(key, false)
     )
+    this.notifyUpdate(forceUpdate)
     return this
   }
 
