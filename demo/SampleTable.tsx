@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as React from 'react'
 import { Component } from 'react'
 
@@ -43,21 +44,19 @@ export interface SampleTableState {
 
 export class SampleTable extends Component<{}, SampleTableState> {
 
-  handleSearchChange(event: React.FormEvent, term: string) {
-    this.state.filter.setTerm(term)
+  handleSearchChange = (event: React.FormEvent, term: string) => {
+    this.setState(({ filter }) => ({
+      filter: filter.setTerm(term)
+    }))
   }
 
-  handleSortChange(key: string) {
-    this.state.sorting.next(key)
-  }
-
-  handleDataTableUpdate() {
-    this.forceUpdate()
+  handlePageChange(pageIndex: number) {
+    return () => this.state.pagination.setPageIndex(pageIndex)
   }
 
   componentWillMount() {
     this.setState({
-      pagination: new PaginationPlugin(),
+      pagination: new PaginationPlugin({ initDataSize: tableRows.length }),
       filter: new FilterPlugin(),
       sorting: new SortingPlugin({ keys: ['id', 'name'] }),
     })
@@ -68,25 +67,24 @@ export class SampleTable extends Component<{}, SampleTableState> {
 
     return (
       <div>
-        <TableToolbar onSearchChange={this.handleSearchChange.bind(this)} />
+        <TableToolbar onSearchChange={this.handleSearchChange} />
         <Divider />
         <DataTable
           data={tableRows}
           plugins={[filter, sorting, pagination]}
-          onStateUpdate={this.handleDataTableUpdate.bind(this)}
         >
           <Column
             header="ID"
             field={row => row.id}
             type="number"
             sortable={{order: sorting.fnGet('id')}}
-            onHeaderTouch={() => this.handleSortChange('id')}
+            onHeaderTouch={() => this.state.sorting.next('id')}
           />
           <Column
             header="Name"
             field={row => row.name}
             sortable={{order: sorting.fnGet('name')}}
-            onHeaderTouch={() => this.handleSortChange('name')}
+            onHeaderTouch={() => this.state.sorting.next('name')}
           />
           <Column
             header="Status"
@@ -94,7 +92,7 @@ export class SampleTable extends Component<{}, SampleTableState> {
           />
         </DataTable>
         <Divider />
-        <TableFooter />
+        <TableFooter pages={pagination.createPageNavigations()} />
       </div>
     )
   }
