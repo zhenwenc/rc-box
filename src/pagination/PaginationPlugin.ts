@@ -29,11 +29,10 @@ export class PaginationPlugin extends PaginationPluginImpl {
     return this._pageSize
   }
 
-  setPageSize(size: number, notifyUpdate = true) {
+  setPageSize(size: number, forceUpdate = true) {
     check(size > 0 && Number.isInteger(size),
       `Page size must be positive integer, but got [${size}]`)
     this._pageSize = size
-    if (notifyUpdate) { this.notifyUpdate() }
     return this
   }
 
@@ -41,11 +40,10 @@ export class PaginationPlugin extends PaginationPluginImpl {
     return this._currPage
   }
 
-  setPageIndex(index: number, notifyUpdate = true) {
+  setPageIndex(index: number, forceUpdate = true) {
     check(index > 0 && Number.isInteger(index),
       `Page number must greater than 0, but got ${index}`)
     this._currPage = index
-    if (notifyUpdate) { this.notifyUpdate() }
     return this
   }
 
@@ -54,6 +52,8 @@ export class PaginationPlugin extends PaginationPluginImpl {
   }
 
   protected setMaxIndex(maxIndex: number) {
+    console.log('set max index');
+
     this._maxPage = maxIndex
   }
 
@@ -89,6 +89,8 @@ export class PaginationPlugin extends PaginationPluginImpl {
    * [first][prev][1, 2, 3, ...][next][last]
    */
   createPageNavigations(includePrevNext = true, includeFirstLast = false) {
+    console.log('createPageNavigations');
+
     let pages = _.range(1, this.maxIndex + 1)
       .map(index => ({
         key: _.toString(index),

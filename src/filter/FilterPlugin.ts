@@ -32,11 +32,8 @@ export class FilterPlugin extends FilterPluginImpl {
     return this.filterPredicate
   }
 
-  setTerm(term: string, notifyUpdate = true) {
+  setTerm(term: string, forceUpdate = true) {
     this.filterTerm = _.trim(term)
-    if (notifyUpdate) {
-      this.notifyUpdate()
-    }
     return this
   }
 }

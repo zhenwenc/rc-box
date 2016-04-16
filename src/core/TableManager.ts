@@ -1,7 +1,7 @@
 import { Iterable, List, Seq } from 'immutable'
 
 import { ColumnDef } from './TableColumn'
-import { TablePlugin, StateUpdateCallback } from './TablePlugin'
+import { TablePlugin } from './TablePlugin'
 
 export type RawTableData = Seq<number, any> | any[]
 export type TableData = Iterable<number, any>
@@ -11,7 +11,6 @@ export class TableManager {
   private columns: List<ColumnDef>
 
   constructor(
-    updateCallback: StateUpdateCallback,
     plugins: List<TablePlugin>,
     columns: List<ColumnDef>
   ) {
@@ -20,16 +19,10 @@ export class TableManager {
       (a, b) => b.priority - a.priority
     ).toList()
     // Register root element to each plugin
-    this.plugins.forEach(p => {
-      if (!!p.register) {
-        p.register(updateCallback)
-      }
-    })
+    this.plugins
+      .filter(p => !!p.register)
+      .forEach(p => p.register(this))
     this.columns = columns
-  }
-
-  get shouldProcess() {
-    return true // TODO
   }
 
   // TODO receive an argument to indicate which plugin triggers
@@ -37,20 +30,21 @@ export class TableManager {
   //      the plugins, which can be determined by the plugin
   //      priority.
 
-  asyncProcess(srcData: RawTableData): Promise<TableData> {
-    return new Promise((resolve, reject) => {
-      const data = (srcData instanceof Seq)
-                ? srcData as Seq<number, any>
-                : Seq(srcData)
-      resolve(this.process(data))
-    })
-  }
+  // asyncProcess(srcData: RawTableData): Promise<TableData> {
+  //   return new Promise((resolve, reject) => {
+  //     const data = (srcData instanceof Seq)
+  //               ? srcData as Seq<number, any>
+  //               : Seq(srcData)
+  //     resolve(this.process(data))
+  //   })
+  // }
 
-  private process(data: TableData): TableData {
+  process(rawData: RawTableData): TableData {
+    const data = (rawData instanceof Iterable)
+               ? rawData as Iterable<number, any>
+               : Seq(rawData)
     return this.plugins.reduce(
-      (result, plugin) =>
-        plugin.process(result, this.columns)
-      ,
+      (result, plugin) => plugin.process(result, this.columns),
       data
     )
   }

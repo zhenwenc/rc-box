@@ -51,17 +51,14 @@ export class SortingPlugin extends SortingPluginImpl {
     return () => this.get(key)
   }
 
-  set(key: string, order: SortingOrder, notifyUpdate = true) {
+  set(key: string, order: SortingOrder, forceUpdate = true) {
     this.checkKey(key)
     this.checkOrder(order)
     this.states = this.states.set(key, order)
-    if (notifyUpdate) {
-      this.notifyUpdate()
-    }
     return this
   }
 
-  next(key: string, notifyUpdate = true) {
+  next(key: string, forceUpdate = true) {
     const current = this.get(key)
     const next = current === NONE
       ? ASC
@@ -69,13 +66,11 @@ export class SortingPlugin extends SortingPluginImpl {
         ? DESC
         : ASC
     this.resetAll()
-    this.set(key, next, notifyUpdate)
-    return this
+    return this.set(key, next, forceUpdate)
   }
 
-  reset(key: string, notifyUpdate = true) {
-    this.set(key, NONE, notifyUpdate)
-    return this
+  reset(key: string, forceUpdate = true) {
+    return this.set(key, NONE, forceUpdate)
   }
 
   resetAll() {

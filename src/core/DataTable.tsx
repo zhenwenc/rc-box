@@ -5,8 +5,8 @@ import { Component } from 'react'
 import { Seq, List } from 'immutable'
 
 import { ColumnDef, ColumnData, mapColumnDef } from './TableColumn'
-import { TableManager, RawTableData } from './TableManager'
-import { TablePlugin, StateUpdateCallback } from './TablePlugin'
+import { TableManager, RawTableData, TableData } from './TableManager'
+import { TablePlugin } from './TablePlugin'
 import { MuiTable } from '../renderers'
 
 const {
@@ -74,14 +74,21 @@ export interface DataTableProps {
   }
 
   /**
-   * Callback function that fired when the plugin managed state
-   * has changed. You should trigger component update in this
-   * function.
+   * Callback function that fired when the table data has changed.
    *
-   * NOTE: This property is required if you have stateful plugin,
+   * As the datatable only handle rerender it's own components on
+   * data state changed, threfore you should trigger rerendering
+   * other related components in this function.
+   *
+   * i.e: Rerender pagination navigation controls after data table
+   *      is updated.
+   *
+   * NOTE: This property is useful if you have stateful plugin,
    *       otherwise you can set this to undefined.
    */
-  onStateUpdate?: StateUpdateCallback
+  onTableUpdate?: {
+    (data: TableData): void
+  }
 
   /**
    * Plugins for manipulating the table data.
@@ -106,7 +113,7 @@ export interface DataTableState {
   /**
    * Processed table data.
    */
-  tableData: Seq<number, any>
+  tableData: TableData
 }
 
 export class DataTable extends Component<DataTableProps, DataTableState> {
@@ -115,9 +122,9 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
 
   constructor(props: DataTableProps) {
     super()
-    const { children, plugins, onStateUpdate } = props
+    const { children, plugins } = props
     this.columns = List(React.Children.map(children, mapColumnDef))
-    this.manager = new TableManager(onStateUpdate, List(plugins), this.columns)
+    this.manager = new TableManager(List(plugins), this.columns)
   }
 
   get header() {
@@ -140,29 +147,25 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
     })
   }
 
-  asyncUpdateTableData(srcData: RawTableData) {
+  updateTableData(srcData: RawTableData) {
     const { onProcessFailed } = this.props
-
-    const now = Date.now()
-
-    const notifyUpdate = data => {
-      // TODO only update state if the nonce value is matched
-      this.setState({
-        isProcessing: false,
-        tableData: data as Seq<number, any>,
-      })
-    }
-
-    if (this.manager.shouldProcess) {
+    try {
+      const now = Date.now()
+      const data = this.manager.process(srcData)
       this.setState({
         lastUpdate: now,
-        isProcessing: true,
-        tableData: Seq<number, any>(),
+        isProcessing: false,
+        tableData: data,
       })
-      this.manager.asyncProcess(srcData)
-        .then(notifyUpdate)
-        .catch(onProcessFailed)
+      this.notifyTableUpdate(data)
+    } catch (err) {
+      onProcessFailed(err)
     }
+  }
+
+  notifyTableUpdate(data: TableData) {
+    const { onTableUpdate } = this.props
+    if (!_.isUndefined(onTableUpdate)) onTableUpdate(data)
   }
 
   componentWillMount() {
@@ -176,11 +179,11 @@ export class DataTable extends Component<DataTableProps, DataTableState> {
   componentDidMount() {
     // NOTE: We trigger this async operation here to ensure it
     //       will be processed in client side.
-    this.asyncUpdateTableData(this.props.data)
+    this.updateTableData(this.props.data)
   }
 
   componentWillReceiveProps(nextProps: DataTableProps) {
-    this.asyncUpdateTableData(nextProps.data)
+    this.updateTableData(nextProps.data)
   }
 
   render() {
