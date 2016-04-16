@@ -11,11 +11,17 @@ import {
 
 
 export interface FooterProps {
-  pages: Iterable<number, {
+  pageList: Iterable<number, {
     key: any,
     active: boolean,
-    handleTouch: React.TouchEventHandler
-  }>
+    handler: React.TouchEventHandler
+  }>,
+  pageSizeList: Iterable<number, {
+    value: number,
+    label: any,
+    active: boolean,
+  }>,
+  onPageSizeChange: React.TouchEventHandler
 }
 
 export class Footer extends Component<FooterProps, any> {
@@ -48,24 +54,37 @@ export class Footer extends Component<FooterProps, any> {
       }
     }
   }
+
   render() {
+    const { pageList, pageSizeList, onPageSizeChange } = this.props
+    const pageSize = pageSizeList.find(x => x.active)
+
     return (
       <GridList cols={2} cellHeight={40} style={this.styles.base}>
         <div style={this.styles.pageLength.container}>
-          <SelectField autoWidth={true} style={this.styles.pageLength.select} value={10}>
-            <MenuItem value={10} primaryText="10 Rows" />
-            <MenuItem value={20} primaryText="20 Rows" />
-            <MenuItem value={30} primaryText="30 Rows" />
+          <SelectField
+            autoWidth={true}
+            style={this.styles.pageLength.select}
+            value={pageSize && pageSize.value}
+            onChange={onPageSizeChange}
+          >
+          {pageSizeList.map((pageSize, index) => (
+            <MenuItem
+              key={index}
+              value={pageSize.value}
+              primaryText={pageSize.label}
+            />
+          ))}
           </SelectField>
         </div>
         <div style={this.styles.pageNumber.container}>
-        {this.props.pages.map(page => (
+        {pageList.map((page, index) => (
           <RaisedButton
-            key={page.key}
+            key={index}
             style={this.styles.pageNumber.button}
             label={page.key}
             disabled={page.active}
-            onTouchTap={page.handleTouch}
+            onTouchTap={page.handler}
           />
         ))}
         </div>
