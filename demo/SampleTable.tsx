@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 import { Component } from 'react'
+import { List } from 'immutable'
 
 import {
   Divider,
@@ -9,11 +10,11 @@ import {
 import {
   DataTable,
   Column,
-  TableToolbar,
-  TableFooter,
+  ColumnData,
   FilterPlugin,
   PaginationPlugin,
   SortingPlugin,
+  MuiTable,
 } from '../src/index'
 
 const tableRows = [
@@ -45,9 +46,10 @@ export interface SampleTableState {
 export class SampleTable extends Component<{}, SampleTableState> {
 
   handleSearchChange = (event: React.FormEvent, term: string) => {
-    this.setState(({ filter }) => ({
-      filter: filter.setTerm(term)
-    }))
+    // this.setState(({ filter }) => ({
+    //   filter: filter.setTerm(term)
+    // }))
+    this.state.filter.setTerm(term)
   }
 
   handlePageChange(pageIndex: number) {
@@ -62,38 +64,53 @@ export class SampleTable extends Component<{}, SampleTableState> {
     })
   }
 
+  renderTable(
+    headerData: List<ColumnData>,
+    rowsData: List<List<ColumnData>>
+  ) {
+    const { pagination } = this.state
+
+    return (
+      <div>
+        <MuiTable.Toolbar onSearchChange={this.handleSearchChange} />
+        <Divider />
+        {MuiTable.renderTable(
+          MuiTable.renderTableHeader(headerData),
+          rowsData.map(MuiTable.renderTableRow)
+        )}
+        <Divider />
+        <MuiTable.Footer pages={pagination.createNavigations()} />
+      </div>
+    )
+  }
+
   render() {
     const { filter, sorting, pagination } = this.state
 
     return (
-      <div>
-        <TableToolbar onSearchChange={this.handleSearchChange} />
-        <Divider />
-        <DataTable
-          data={tableRows}
-          plugins={[filter, sorting, pagination]}
-        >
-          <Column
-            header="ID"
-            field={row => row.id}
-            type="number"
-            sortable={{order: sorting.fnGet('id')}}
-            onHeaderTouch={() => this.state.sorting.next('id')}
-          />
-          <Column
-            header="Name"
-            field={row => row.name}
-            sortable={{order: sorting.fnGet('name')}}
-            onHeaderTouch={() => this.state.sorting.next('name')}
-          />
-          <Column
-            header="Status"
-            field={row => row.status.content}
-          />
-        </DataTable>
-        <Divider />
-        <TableFooter pages={pagination.createPageNavigations()} />
-      </div>
+      <DataTable
+        data={tableRows}
+        plugins={[filter, sorting, pagination]}
+        renderer={this.renderTable.bind(this)}
+      >
+        <Column
+          header="ID"
+          field={row => row.id}
+          type="number"
+          sortable={{order: sorting.fnGet('id')}}
+          onHeaderTouch={() => this.state.sorting.next('id')}
+        />
+        <Column
+          header="Name"
+          field={row => row.name}
+          sortable={{order: sorting.fnGet('name')}}
+          onHeaderTouch={() => this.state.sorting.next('name')}
+        />
+        <Column
+          header="Status"
+          field={row => row.status.content}
+        />
+      </DataTable>
     )
   }
 }
