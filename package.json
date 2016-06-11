@@ -12,7 +12,7 @@
     "lib"
   ],
   "scripts": {
-    "clean": "npm cache clean && rimraf node_modules doc typings coverage dist",
+    "clean": "npm cache clean && rimraf node_modules doc typings coverage dist lib",
     "clean:dist": "rimraf lib dist coverage",
     "lint": "./node_modules/.bin/tslint 'src/**/*.ts'",
     "test": "karma start",
