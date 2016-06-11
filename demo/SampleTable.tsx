@@ -14,8 +14,9 @@ import {
   FilterPlugin,
   PaginationPlugin,
   SortingPlugin,
-  MuiTable,
 } from '../src/index'
+
+import { MuiTable } from './renderers'
 
 const tableRows = [
   {id: '1', name: 'John Smith', status: {content: 'Employed'}},
