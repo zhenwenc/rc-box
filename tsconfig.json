@@ -38,10 +38,6 @@
         "src/pagination/index.ts",
         "src/pagination/PaginationPlugin.ts",
         "src/pagination/PaginationPluginImpl.ts",
-        "src/renderers/index.ts",
-        "src/renderers/MuiFooterRenderer.tsx",
-        "src/renderers/MuiTableRenderer.tsx",
-        "src/renderers/MuiToolsRenderer.tsx",
         "src/sorting/index.ts",
         "src/sorting/SortingOrder.ts",
         "src/sorting/SortingPlugin.ts",
@@ -51,6 +47,9 @@
         "src/utils/checkOption.ts",
         "src/utils/index.ts",
         "demo/main.tsx",
+        "demo/renderers/MuiFooterRenderer.tsx",
+        "demo/renderers/MuiTableRenderer.tsx",
+        "demo/renderers/MuiToolsRenderer.tsx",
         "demo/SampleTable.tsx"
     ]
 }
