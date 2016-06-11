@@ -10,8 +10,7 @@ import {
 } from 'material-ui'
 
 import { Iterable } from 'immutable'
-import { ColumnData } from '../core'
-import { SortingOrder } from '../sorting'
+import { ColumnData, SortingOrder } from '../../src'
 
 const sortingImage = new Map([
   [SortingOrder.NONE, require('./images/sorting-both.png')],
